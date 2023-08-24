@@ -1,0 +1,45 @@
+*) Worker Machine in K8s cluster:
+    -> './05_Worker_Machine_in_K8s_Cluster.png'
+    -> Let's start with One node with 2 application Pods running on it.
+    -> One of the main component of kubernetes architecture are it's Worker, Server or Nodes and in each Nodes it will have multiple Application Pods and container running on that node.
+    -> And the way kubernetes does this is with 3 Processes that must be installed in every Node that are used to schedule and manage those Pods
+    -> So, "Nodes" are the cluster service that actually do Work that's way sometimes it is called as the "worker nodes"
+    *) Kubelet
+        -> './02_Kubelet.png'
+        -> So the first process that needs to run on every nodes is the Container Runtime for example we have docker
+        -> So application Pods have container running inside, A container runtime needs to be installed on Every node
+        -> So the Processes that actually schedules Those Pods and the Container underneath is called "Kubelet" which is the process of kubernetes itself unlike container runtime that have Interface with Both with Container runtime and the machine(The Node) itself.
+        -> So, Kubelet is responsible for taking that configuration and actually running that Pod or starting that pod with a container and assigning resources in that Node to that container like CPU and storage resources.
+    
+    *) Kube Proxy
+        -> Usually kubernetes cluster is made of of multiple Nodes which also must have container runtime and Kubelets installed inside and you can have 100's or those Worker Nodes which could be the replication of the same Application Pod or different Application Pods
+        -> And the communication betweens Worker nodes works is using Services which is sort of a load balancer where it catches the request directly to the pod and forward it to the respected pod.
+        -> And the third process that is responsible for forwarding request from services to Pods is 'Kube Proxy"
+        -> That is also must be installed on every Node
+        -> Kube Proxy has intelligence forwarding logic inside that make sure that the communication also works on a performant way with low overhead.
+    
+    => So we have 3 Node Processes:
+        1. Kubelet
+        2. Kube Proxy
+        3. Container Runtime
+        
+        
+*) Master Node:
+    *) How do you interact with this cluster?
+        -> How to:
+            -> Schedule Pod?
+            -> Monitor is Pod dies?
+            -> re-schedule/restart pod?
+            -> Join a new Node?
+        
+        => All these Managing Processes are done by Master Node
+    -> So Master Node have completely different process running inside:
+    -> There are 4 Process run on every Master Nodes that control the cluster state and the worker nodes as well:
+        1. API Server:
+            -> './07_Master_Node_API_Server.png', './08_Master_Node_API_Server.png'
+            -> So, we as a user want to deploy application in kubernetes cluster we interact with the API Server using some client it could be using kubernetes Dashboard or Command line tool like Kubelet or a kubernetes API
+            -> So API Server is like a Cluster Gateway which get's the initial request and it update into the cluster and even the queries from the cluster.
+            -> And it also act as a gatekeeper for Authentication So that only authenticated request get's through the cluster
+            -> So, whenever you want to schedule new Pods, deploy new application, create new service, or any other components we have to talk to API Server to the Master Node and the API Server then Validate you request and if everything is fine then it will forward you request to other process for what you have request for.
+        2. Scheduler:
+            -> If you request for Schedule new Pod to "API Server" then it will validate the request and then send to the "Scheduler" in order to start the application Pod to one of the Worker Nodes,
