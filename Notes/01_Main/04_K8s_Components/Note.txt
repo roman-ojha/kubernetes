@@ -77,3 +77,6 @@
         -> So this component is meant specifically for Application like Databases like: MySQL, MongoDB etc.. or another other stateful application or Databases Should be created using "StatefulSet" and not "Deployment"
         -> So "StatefulSet" take care of replicating the Pods and Scaling then up and Scaling then down but making sure that the database reads and writes are synchronized so that there would be now database Inconsistencies.
         -> So Managing the "StatefulSet" would be harder then "Deployment" because we have to handle on database because of that we should host the Database outside of the Kubernetes cluster and just have the Deployment or stateless application that replicate with no problem inside of the kubernetes cluster and communicate with the external database.
+
+
+NOTE: There are more then these component that we learned but these are the main Component inside kubernetes cluster
