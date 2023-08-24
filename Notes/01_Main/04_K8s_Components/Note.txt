@@ -34,4 +34,46 @@
         -> So instead of request goes to service it goes to 'Ingres' and it does the forwarding to the service
 
 *) ConfigMap and Secret Component:
-    -> So, as we said 
+    -> So, as we said Pod communicate with each other using service
+    -> So, let's say that we have to db service called 'mongo-db-service' that we use to do a communication with the database
+    -> So, To configure these database endpoint or urls We usually use build image of the application, But if the endpoint of the service or the service name changed to let's say 'mongo-db' you would have to adjust those url into the application, So usually you would have to re-build the application with the new version and you would have to push it to the repository and you would have to pull that image in you pod and restart the whole thing.
+    -> So for that purpose kubernetes have component called 'ConfigMap'
+    -> What it does is you external configuration fo you application.
+    -> So ConfigMap map usually contain configuration data like Urls of database or some other services that it use and in kubernetes you just connected to the "Pod". So, the pod get the data that "ConfigMap" Contains
+    -> So now if you change the name of the service, You just adjust the ConfigMap and that's it.
+    *) Secret:
+        -> Also some other external configuration of the service could be something like database 'username' & 'password' could also get change in the application deployment process, But to put the database credentials into "ConfigMap" in the plain text format would be insecure Even tho it is an external configuration. So for this purpose Kubernetes have another Component called 'Secret'
+        -> It's is like 'ConfigMap' But it store Secret Data, credentials, and it stored not in plain text format but in 'base64' encoded format
+        -> You can actually use the Data from "ConfigMap" or "Secret" inside the application Pod using example like environment variables or even as a properties file
+
+*) Volumes Component:
+    -> So let's say that we have this database Pod that our application uses, and it have some data in this setup if the database Container or the Database Pod restarted the database would be no longer there.
+    -> That would be a Problem because we want our data to be persistent for long term.
+    -> The way to achieve is using Kubernetes "Volumes"
+    -> Volume attach physical store on a hard drive to you pod or then the storage could be either on you local machine meaning on the same Server node where the pod is running or it could be on the remote storage meaning outside of the kubernetes cluster it could be cloud storage or local storage which is not part of the kubernetes cluster, you just have an external reference to it.
+    -> So now if the database container or pod restarted then all the data would be there persistent.
+    -> This Storage is like a External hard drive plug into the kubernetes cluster because K8s doesn't manage data persistent.
+
+*) Deployment and StatefulSet Component:
+    -> './10_Deployment.png'
+    -> So now user can access our application through browser but what if our application pod dies user have to wait for the application down time.
+    -> But because we have kubernetes we don't only have to rely on one Application pod or one database Pod we can create and replicate it on multiple servers.
+    -> So, on the another Node server where another replica or clone of our application pod would run which will also be connected to the same "Service"
+    => So, server have 2 functionalities: './11_Service.png'
+        -> Permanent IP
+        -> Load balancer
+            -> it means that the service will actually catch the request forward it to which ever pod is least busy
+    *) Deployment:
+        -> './10_Deployment.png'
+        -> In order to create the second replica or the application pod we would not create a second pod but instead we would define a blue print for Application pod and specify how many replica that you would like to run and that component or the blue print is called "Deployment"
+        -> And in practice we would not work with pods or we would not be creating pods we would create "Deployments" because there we can specify how many replica we want, and also we can scale up or scale down number of replicas of pods that we need.
+        -> So Deployment is another Abstraction on top of "Pods" which makes more easy way to interact with Pods
+        -> So in practice we would mostly work with deployment but not with pods.
+        -> So, now if one Application pod will die then the "Service" will forward the request to another one.
+
+    *) StatefulSet
+        -> What about Database Pod if one database pod dies that how would we access the Database in that case we will also replicate the Database Pod in different Nodes
+        -> But we would not replicate Database Pod with "Deployment" because Database has a state which is it's data meaning we have clones and replica of database they will all needs to access the same shared data storage so there you would need some kind of Mechanism to manage which pods are currently writing to that storage and which pods are reading from the storage in order to avoid data Inconsistencies and that Mechanism in addition to replicating feature is offered by another component called "StatefulSet"
+        -> So this component is meant specifically for Application like Databases like: MySQL, MongoDB etc.. or another other stateful application or Databases Should be created using "StatefulSet" and not "Deployment"
+        -> So "StatefulSet" take care of replicating the Pods and Scaling then up and Scaling then down but making sure that the database reads and writes are synchronized so that there would be now database Inconsistencies.
+        -> So Managing the "StatefulSet" would be harder then "Deployment" because we have to handle on database because of that we should host the Database outside of the Kubernetes cluster and just have the Deployment or stateless application that replicate with no problem inside of the kubernetes cluster and communicate with the external database.
