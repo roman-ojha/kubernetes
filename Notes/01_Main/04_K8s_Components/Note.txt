@@ -1,0 +1,37 @@
+*) Node and pod Component:
+    -> Node is a simple server, physical or virtual machine
+    -> And the basic component of the smallest unit of kubernetes is 'Pod'
+    -> Pod: 
+        -> Smallest unit of K8s
+        -> Abstraction over container
+        -> It create the running environment or a layer on top of the container.
+        -> It is the Abstraction layer of container so that if you want to replace with new container that would be possible.
+        -> So it's help to only interact with kubernetes layer.
+        -> You can run multiple container inside 1 Pod but Usually 1 application per Pod.
+    *) How container communicate with each in kubernetes world:
+        -> kubernetes offer out of the box virtual network.
+        -> Each Pod gets it's own IP Address
+        -> Each Pod can communicate with each other using Ip address.
+        -> It would be a internal IP address.
+        -> If some Pod got dies cause of container crash's Then new one will get create on replace of previous one, it will get new IP address
+        -> Problem: That could be inconvenient because you could had done some communication with database using the ip address now you have to adjust it every time pod restart
+            -> Solution: Because of that Another Component of kubernetes called 'Service' is used
+
+*) Service & Ingress Component:
+    -> Server is a Static or Permanent IP address that can be attach to each pod.
+    -> So different pod would have it's own service.
+    -> so, Lifecycle of Pod and service are Not connected, So even if the Pod dies the service will stay. So, Now you don't have to change that endpoint any more.
+    *) External Service:
+        -> So, The application that we create should be accessible through browser for this you have to create external service
+        -> It is the service that open a communication from External Sources
+        -> Ex for DB you might now want to open a server for that you would create a Internal Service
+        -> http://<node_ip_address>:<port>
+            -> EX: http://127.89.101.2:8080
+        -> It is good for testing service fast But not good for the end product to be able to access by the other Application or user
+        -> For that you Pod service could look like this on https protocol 'https://my-app.com', For that there is another component of Kubernetes called 'Ingress'
+
+    *) Ingress:
+        -> So instead of request goes to service it goes to 'Ingres' and it does the forwarding to the service
+
+*) ConfigMap and Secret Component:
+    -> So, as we said 
