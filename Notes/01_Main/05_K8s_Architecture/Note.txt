@@ -42,4 +42,33 @@
             -> And it also act as a gatekeeper for Authentication So that only authenticated request get's through the cluster
             -> So, whenever you want to schedule new Pods, deploy new application, create new service, or any other components we have to talk to API Server to the Master Node and the API Server then Validate you request and if everything is fine then it will forward you request to other process for what you have request for.
         2. Scheduler:
-            -> If you request for Schedule new Pod to "API Server" then it will validate the request and then send to the "Scheduler" in order to start the application Pod to one of the Worker Nodes,
+            -> './09_Master_Node_Scheduler.png', './10_Master_Node_Scheduler.png'
+            -> If you request for Schedule new Pod to "API Server" then it will validate the request and then send to the "Scheduler" in order to start the application Pod to one of the Worker Nodes.
+            -> Instead of randomly assigning new Pod to any node Scheduler have this intelligence way of deciding which specific worker node the next post would be schedule.
+            -> Scheduler Just decides on which node new Pod should be scheduled, the Process that does the scheduling or that start the pod with the container is "Cublet".so, it get's the request from the scheduler and execute the request on that Node
+            
+        3.Controller Manager:
+            -> So, Whenever Pods dies on any node there most be a way to detect and reschedule those Pods as soon as possible.
+            -> It detects Cluster state changes like: crashing or Pods etc...
+            -> For that it request it to the Scheduler to reschedule those dead pods and same cycle happen that scheduler decide on which node should that Pods get added based on the resources available and make sure to request to the Kublets on those Worker Nodes to actually restart the Pods
+            
+        4. etcd
+            -> It is a key-value store of the cluster state.
+            -> we can think of it as a cluster brain.
+            -> it means that ever change in the cluster for example when a new pod schedule, or when a new Pod dies all of these changes are saved or updated into these Key-value Store.
+            -> But Application data are not stored in etcd.
+            -> Store to use for Master Process to communicate with the Worker processes and vice versa.
+
+    -> In practice kubernetes cluster are made up of multiple Masters where each master node run's its own master processes.
+
+*) Example of Cluster Setup:
+    -> In very small Cluster You would probably have a:
+        -> 2 Master Nodes
+            -> They need less resources like Cpu, Ram, Storage because they will have less load.
+        -> 3 Worker Nodes
+            -> They need more resources.
+    -> and as you application complexity and it's demand of resources get increased you may add more Master Nodes & Worker Nodes.
+    -> In existing kubernetes cluster to add new Master/Node Server Easily by just:
+        1. you would just get a new Bare Server
+        2. and Install all the Master/worker Node processes on it.
+        3. Add it to the kubernetes cluster.
