@@ -1,0 +1,7 @@
+-> kubectl version --output=yaml (see client and server version)
+-> minikube --version
+-> minikube start --driver==hyperv(start kubernetes cluster with hyperv hypervisor)
+-> minikube config set driver hyperv (set hyperv as default driver)
+-> kubectl get all (to get all Cluster)
+-> kubectl get nodes (to get all nodes)
+-> minikube status (status of minikube)

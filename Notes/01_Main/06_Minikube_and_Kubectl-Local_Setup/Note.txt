@@ -1,0 +1,57 @@
+*) Minikube:
+    -> './01_Production_Cluster_Setup.png'
+    -> In kubernetes Production cluster it will be something like this:
+        -> Have multiple Masters at least 2 in production setting.
+        -> Have Multiple Worker Nodes
+        -> And Master Node and worker nodes have their own set of responsibilities
+        -> As you see on the './01_Production_Cluster_Setup.png' diagram you would have Separate virtual or physical machine that each represent a node.
+    
+    -> To test on local machine setting up these cluster would be difficult or it would be impossible if you don't have enough resources like CUP, Memory etc..
+    -> So for that Use case there is a Open source tool called Minikube
+    -> So Minikube is a 1 Node cluster where Master processes and the Worker processes both run on One Machine.
+    -> That that Node will have Docker container runtime pre-installed
+    -> And the way it's going to run in you local machine is through Virtual Box.
+    -> Minikube:
+        -> Create Virtual Box on you local machine
+        -> Node runs in the Virtual Box
+        -> So, 1 Node K8s cluster that run on Virtual Box on you local machine like you Laptop, which will help us for testing
+
+*) Kubectl
+    -> So, we have create the Cluster on our machine using Minikube Now we need a way to interact with the cluster for that you have to create Components, Configure it etc.. in that case we have "Kubectl"
+    -> So you need a way to create Pods, Other kubernetes Components on the Node and the way to do is using a "Kubectl"
+    -> It is a Command line tool for K8s cluster.
+    -> So, We have the master process that interact firstly with API Server in Master Node to interact with it we have different way like:
+        1. UI
+        2. API
+        3. CLI:
+            -> Kubectl
+    -> This is most powerful among 3 client
+    -> Note: Kubectl is not only for Minikube cluster if you have a cloud cluster or Hybrid cluster Kubectl is the tool to use to interact with any type of kubernetes Cluster setup
+    
+*) Installation & Setup:
+    -> Kubectl: https://kubernetes.io/docs/tasks/tools/#kubectl
+    -> Minikube: https://minikube.sigs.k8s.io/docs/start/
+    -> Note that Minikube needs a Virtualization enable on you machine for that you need to install some type of Hypervisor it could be Virtual Box
+        -> we can install HyperKit for mac: https://minikube.sigs.k8s.io/docs/drivers/hyperkit/
+        -> or install Hyperv for windows: https://minikube.sigs.k8s.io/docs/drivers/hyperv/
+    Step 1: Install Hypervisor
+        -> for now we will use Hyperv
+    Step 2: Install Minikube
+    Step 3: Run minikube with hyperv:
+        -> minikube start --driver=hyperv 
+        -> minikube config set driver hyperv (set hyperv as default driver)
+    
+    NOTE: after installing minikube cause kubectl is an dependency it will also install Kubectl so we don't need to install separately
+
+*) Command:
+    -> kubectl version --output=yaml (see client and server version)
+    -> minikube --version
+    -> minikube start --driver==hyperv(start kubernetes cluster with hyperv hypervisor)
+    -> minikube config set driver hyperv (set hyperv as default driver)
+    -> kubectl get all (to get all Cluster)
+    -> kubectl get nodes (to get all nodes)
+    -> minikube status (status of minikube)
+    
+
+=> So we will use Minikube CLI for start up/deleting the cluster
+=> And use Kubectl CLI for configuring the Minikube cluster
