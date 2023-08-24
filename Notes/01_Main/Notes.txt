@@ -2,3 +2,6 @@
 
 *) Following Resource:
     -> https://github.com/K8sAcademy/Fundamentals-HandsOn
+    
+*) Update Note:
+    -> from './03_Kubernetes' I follow another Resource: https://youtu.be/X48VuDVv0do

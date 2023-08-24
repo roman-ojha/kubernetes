@@ -1,0 +1,10 @@
+*) Kubernetes:
+    -> It is Open source container orchestration tool.
+    -> Helps to manage multiple containers from docker or other container technologies
+    -> It help to deploy in different environments like Physical machine, Virtual Machine, Cloud environment or hybrid environment
+
+*) Why need for Container orchestration tool:
+    -> Container Help on small independent application like microservice application
+    -> And the rise of container in microservice technologies result in 100 or upto 100s of containers.
+    -> managing those lot's of container across multiple environments using script and self made tools may become complex.
+    -> So, That demand for the proper way of managing those hundreds of containers.
