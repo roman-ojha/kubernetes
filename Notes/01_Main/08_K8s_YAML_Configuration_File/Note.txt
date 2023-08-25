@@ -1,0 +1,20 @@
+*) 3 Parts of a K8s Configuration file
+    1. Metadata: './01_First_Part_of_Configuration_File.png'
+    2. Specification: './02_Second_Part_of_Configuration_File.png'
+        -> where we put every kind of Configuration you want to apply for that Component
+    3. Status:
+        -> It will be automatically generated and add by kubernetes
+        -> So kubernetes will always compare like 'what is the desired state?', and 'what is the actual state or status of that component?'
+        -> and if the actual state and the desired state don't match so kubernetes knows there is something needs to be fixed
+        -> Ex: './04_Third_Part_of_Configuration_File.png', './05_Third_Part_of_Configuration_File.png'
+            -> if you have specify the 'replicas' as 2 then kubernetes will add status of you deployment and it will update the state continuously
+            -> and if status says 1 replica is running then kubernetes will compare that status with the specification and it will know there is a problem there that another replica needs to be created because new specification says 2 replica
+        
+        *) Where does K8s get this status data?
+            -> all the information are stored inside the 'control-plane(master)' Node 'etcd' Process that we talk before inside '../05_K8s_Architecture/Note.txt'
+            -> Etcd holds the current status of any K8s component
+
+*) Configuration file:
+    -> Note that yaml syntax  are strict indentation 
+    -> for the indentation we can use yaml online validator or IDE like vscode with extension feature
+    -> Store the config file with your code or own git repository

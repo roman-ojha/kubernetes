@@ -1,0 +1,24 @@
+# first 2 line is just declaring what you want to create
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#creating-a-deployment
+apiVersion: apps/v1 # this is the api version that we have to look for different component
+kind: Deployment # here we are creating deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec: # Specification attribute would be specific to the kind of component that you are creating
+  # so deployment have it's own attributes that is apply only for deployment, and service have it's own attributes
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.14.2
+          ports:
+            - containerPort: 80
