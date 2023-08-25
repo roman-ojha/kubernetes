@@ -15,3 +15,48 @@
         -> So the URL will be:
             - Ip address of Node
             -> Port of External Service
+            
+*) Secret Configuration File:
+    -> './06_Secret_Configuration_File.png'
+    -> it contain the Credentials that you don't want to store in repository
+    -> NOTE that The value would be in plain text but will be in base64 incoded
+    -> Storing the data in Secret component doesn't automatically make it secure
+    -> There are build-in mechanism (like encryption) for basic security, which are not enable by default.
+    
+    -> To get the encoded value from the terminal:
+        -> echo -n '<value>' | base64
+        -> EX: echo -n 'username' | base64
+                -> dXNlcm5hbWUNCg==
+            echo -n 'password' | base64
+                -> cGFzc3dvcmQNCg==
+
+    -> NOTE: we have to create secret before the Deployment if we want to reference the secret inside of the deployment configuration file
+
+    *) Create Secret:
+        -> kubectl apply -f .\<Secret_file_name>.yaml
+            -> EX: kubectl apply -f .\mongo-secret.yaml
+            
+        -> kubectl get secret
+            -> (Now we can get list of secret that we have crated)
+            
+
+    -> Now we can created secret we can referenced inside Deployment configuration file
+    -> after that we can create the deployment:
+        -> kubectl apply -f .\mongo-deployment.yaml
+
+    !❯ kubectl get all
+        NAME                                      READY   STATUS    RESTARTS   AGE
+        pod/mongodb-deployment-84d7c8b6dd-8fm62   1/1     Running   0          37s
+
+        NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+        service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   3h47m
+
+        NAME                                 READY   UP-TO-DATE   AVAILABLE   AGE
+        deployment.apps/mongodb-deployment   1/1     1            1           37s
+
+        NAME                                            DESIRED   CURRENT   READY   AGE
+        replicaset.apps/mongodb-deployment-84d7c8b6dd   1         1         1       37s
+
+
+*) Creating Internal Service
+    -> 

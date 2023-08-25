@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-deployment # Metadata for MongoDB deployment
+  labels:
+    app: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template: # blueprint of the Pod for MongoDB
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo # we will get the image from docker hub: https://hub.docker.com/_/mongo
+          # The default port of mongodb container is '27017' you can see this in docker hub mongo documentation
+          ports:
+            - containerPort: 27017
+          # Also we are going to use the Environment variables
+          # -> 'MONGO_INITDB_ROOT_USERNAME'
+          # -> 'MONGO_INITDB_ROOT_USERNAME'
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              # because we will going to store this project on an repository like github we will going to reference secret to access the value, so secret will lives in K8s, not in repository.
+              # NOTE: we have to create secret before the Deployment if we want to reference the secret inside of the deployment configuration file
+              # value: <value>
+              # Instead of using 'value' we are referencing through secret so we will use 'valueFrom'
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret # name: <name_of_secret>
+                  key: mongo-root-username # key: <key_of_the_secret>
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: mongo-root-password

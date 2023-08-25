@@ -1,0 +1,8 @@
+{
+  "name": "09_Mongo_Express_Demo_Project",
+  "version": "1.0.0",
+  "description": "MongoDB & Express with Kubernetes demo project",
+  "main": "index.js",
+  "author": "roman-ojha",
+  "license": "MIT"
+}
