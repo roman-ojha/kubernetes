@@ -1,0 +1,13 @@
+*) Install and uninstall minikube with kubectl:
+    -> Open a Command Prompt or PowerShell with administrative privileges.
+        -> minikube stop
+        -> minikube delete
+    -> To uninstall Minikube, navigate to the folder where Minikube is installed (usually in C:\Users\<your_username>\.minikube) and delete the entire folder.
+    -> To uninstall kubectl, open the Command Prompt or PowerShell and run:
+        -> kubectl config unset contexts.minikube
+        -> kubectl config unset users.minikube
+        -> kubectl config unset clusters.minikube
+        -> kubectl config use-context <another_context> 
+            -> Replace <another_context> with the name of another context if you have one.
+
+    -> Install minikube will automatically install kubectl: https://minikube.sigs.k8s.io/docs/start/

@@ -1,3 +1,8 @@
+*) kubernetes Update:
+    -> NOTE: In newer version of kubernetes as we have to described in previously that Kubernetes 'master' term is replaced with 'control-plane'
+    -> but for now we will use 'master' as a term
+    -> https://kubernetes.io/docs/concepts/overview/components/#control-plane-components
+
 *) Worker Machine in K8s cluster:
     -> './05_Worker_Machine_in_K8s_Cluster.png'
     -> Let's start with One node with 2 application Pods running on it.

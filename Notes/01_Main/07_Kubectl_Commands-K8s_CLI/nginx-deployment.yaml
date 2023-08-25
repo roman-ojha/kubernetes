@@ -5,7 +5,7 @@ metadata:
   labels:
     app: nginx
 spec: # specification for the deployment
-  replicas: 1 # how many replicas of th pods that we want to create
+  replicas: 3 # how many replicas of th pods that we want to create
   selector:
     matchLabels:
       app: nginx
@@ -17,5 +17,5 @@ spec: # specification for the deployment
       containers:
         - name: nginx # here we want one container inside of the pods and that is nginx
           image: nginx:1.16 # <name_of_the_image>:<version>
-          port:
+          ports:
             - containerPort: 80 # and we are binding that on port 80

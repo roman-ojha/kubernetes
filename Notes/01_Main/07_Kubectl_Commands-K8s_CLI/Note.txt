@@ -138,4 +138,16 @@
         !> kubectl apply -f <config_file_name>.yaml
             -> For now we will create basic nginx deployment file
             !❯ new-item nginx-deployment.yaml
+            -> we will configure the file './nginx-deployment.yaml' and then
+            !❯ kubectl apply -f .\nginx-deployment.yaml
 
+
+        => If you want to update the configuration then you will change the local configuration file './nginx-deployment.yaml' and then again apply the changes
+            -> lets say that we have update the replica to 3
+            !❯ kubectl apply -f .\nginx-deployment.yaml
+            !❯ kubectl get pod
+                NAME                                READY   STATUS    RESTARTS   AGE
+                nginx-deployment-57d98f69f6-75pfq   1/1     Running   0          6s
+                nginx-deployment-57d98f69f6-mstf6   1/1     Running   0          3m31s
+                nginx-deployment-57d98f69f6-sb48z   1/1     Running   0          6s
+                -> (here we can see that there is 3 pod because we have just change the replica the previous version of pod is still running and it's age is '3m31s' and other 2 replicas where created)
