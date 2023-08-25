@@ -3,6 +3,7 @@
     -> it's means that you can have multiple resources a namespaces.
     -> You can think of a namespace as a Virtual cluster inside of a kubernetes cluster.
     -> By default kubernetes gives you the 4 namespace out of the box.
+        ❯ kubectl get ns
         ❯ kubectl get namespace
             NAME              STATUS   AGE
             default           Active   13h
@@ -33,6 +34,11 @@
         -> kubectl create namespace <Namespace_name>
         -> EX: kubectl create namespace my-namespace
         -> Another way to create namespace is by using namespace configuration file, which is the better way to create namespaces.
+            -> EX: we have create the './prod-namespace.yaml' file
+            -> which we will use any where by another developer now
+            -> now just create it:
+                -> kubectl apply -f .\prod-namespace.yaml
+            -> Now we will use this namespace to create other resources
 
     *) Use cases of Namespace: 
         1. Everything in one namespace
@@ -135,4 +141,18 @@
                 -> kubens (command to see all the namespace and highlight the active one)
                 -> kubens my-namespace (command to switch to another namespace as active)
         -> Also we can achieve with bellow command:
-            -> kubectl config set-context --current --namespace=my-namespace
+            -> kubectl config set-context --current --namespace=[namespaceName]
+            
+    *) Other commands:
+        -> kubectl get pods --all-namespaces
+            -> (get all the pods according to it's namespace that it is running)
+            default       mongo-express-58b7cb7879-sb5pl        1/1     Running   0             10h
+            default       mongodb-deployment-84d7c8b6dd-w47pl   1/1     Running   0             11h
+            kube-system   coredns-5d78c9869d-pw6tl              1/1     Running   0             15h
+            kube-system   etcd-minikube                         1/1     Running   0             15h
+            kube-system   kube-apiserver-minikube               1/1     Running   0             15h
+            kube-system   kube-controller-manager-minikube      1/1     Running   0             15h
+            kube-system   kube-proxy-l5bjl                      1/1     Running   0             15h
+            kube-system   kube-scheduler-minikube               1/1     Running   0             15h
+            kube-system   storage-provisioner                   1/1     Running   1 (15h ago)   15h
+        -> kubectl get services --all-namespaces

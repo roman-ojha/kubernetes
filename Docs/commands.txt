@@ -38,6 +38,9 @@
 -> kubectl delete namespace <namespace_name> (to delete given namespace)
 -> kubectl apply -f .\<component_filename>.yaml --namespace=<namespace_name> (create component on specific given namespace)
 -> kubectl config set-context --current --namespace=<namespace_name> (switch between active namespace)
+-> kubectl apply -f .\<namespace_filename>.yaml (to create namespace using configuration file)
+-> kubectl get pods --all-namespaces (get all the pods according to it's namespace that it is running)
+-> kubectl get <component> --all-namespaces
 
 *) Kubectx & kubens to switch between active namespace: https://github.com/ahmetb/kubectx (install first)
     -> kubens (command to see all the namespace and highlight the active one)
