@@ -41,6 +41,7 @@ spec:
             - name: ME_CONFIG_MONGODB_SERVER
               # we can write directly 'value' here but we will going to get the value from 'configMap' which is the external configuration so that will centralized and also other component can use it
               # './09_ConfigMap.png'
+              # so we will define configMap in './mongo-configmap.yaml'
               valueFrom:
                 configMapKeyRef:
                   name: mongodb-configmap
@@ -53,9 +54,9 @@ metadata:
 spec:
   selector:
     app: mongo-express
-  type: LoadBalancer
+  type: LoadBalancer # to make this service as external service we have to make it as "LoadBalancer"
   ports:
     - protocol: TCP
       port: 8081
       targetPort: 8081
-      nodePort: 30000
+      nodePort: 30000 # so this is the port where external ip address will be open

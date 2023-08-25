@@ -71,5 +71,54 @@
             deployment.apps/mongodb-deployment   1/1     1            1           2m53s
             replicaset.apps/mongodb-deployment-84d7c8b6dd   1         1         1       2m53s
             
+*) Creating ConfigMap for External Configuration:
+    -> https://kubernetes.io/docs/concepts/configuration/configmap/#configmaps-and-pods
+    -> './09_ConfigMap.png'
+    -> Defined inside './mongo-configmap.yaml'
+    -> Used inside './mongo-express.yaml'
+    
+    -> NOTE that same as secret the order of execution of create matters here as well. So, we have to have Config Map already bin in the K8s cluster, when referencing it in other configuration.
 
-*) Create "Mongo Express" Deployment & Service & External Configuration:
+    -> kubectl get configMap
+        -> (command to get the list of created configMap)
+
+*) Create "Mongo Express" Deployment & Service 
+    *) Deployment
+        -> for the deployment we have defined here: './mongo-express.yaml' 
+    *) Service:
+        -> './11_External_Service.png'
+        -> to access the application on the browser we need to create the external service
+        -> https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#create-a-service
+        -> For that we will going to need External Services
+        *) How to make it an External Service:
+            1. -type: LoadBalancer
+                -> this is the to make service as external service because internal service will also act as LoadBalancer
+                -> so this 'LoadBalancer' type does is it accept external request by assigning the service an external Ip address
+            2. nodePort: <port>
+                -> https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+                -> another this that we will use to make it external service is by providing the third port
+                -> so this is the port where external ip address will be open
+                -> so this is the port that we have to put in browser to access this service 
+                -> and the nodePort must be between: 30000 - 32767
+                
+        !❯ kubectl get services
+            NAME                    TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+            kubernetes              ClusterIP      10.96.0.1        <none>        443/TCP          5h7m
+            mongo-express-service   LoadBalancer   10.111.75.188    <pending>     8081:30000/TCP   15s
+            mongodb-service         ClusterIP      10.105.168.215   <none>        27017/TCP        68m
+            -> here we can see that 'mongo-express-service' is 'LoadBalancer' type
+            -> so 'ClusterIP' the internal service which is Default
+            -> here we can see that 'ClusterIP' gives and internal Ip address 'CLUSTER-IP' and 'LoadBalancer' also given the internal Ip address 
+            -> But 'LoadBalancer' will also give it an External Ip address 'EXTERNAL-IP' where in this case it is saying '<pending>' because in minikube it work little differently but in regular kubernetes setup you would see actual Ip address
+            -> And also in internal Service you will only have one port, but in case of External Service you would have Port for both of them in this case "8081:30000/TCP"
+
+        -> To provide the external IP address for External Service in Minikube like this:
+            -> minikube service <name_of_the_service>
+                -> EX: minikube service mongo-express-service
+                    |-----------|-----------------------|-------------|-----------------------------|
+                    | NAMESPACE |         NAME          | TARGET PORT |             URL             |
+                    |-----------|-----------------------|-------------|-----------------------------|
+                    | default   | mongo-express-service |        8081 | http://172.29.160.189:30000 |
+                    |-----------|-----------------------|-------------|-----------------------------|
+                    🎉  Opening service default/mongo-express-service in default browser...
+                -> Here it is providing the external Ip address with port to access the service

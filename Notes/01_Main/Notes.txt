@@ -5,3 +5,5 @@
     
 *) Update Note:
     -> from './03_Kubernetes' I follow another Resource: https://youtu.be/X48VuDVv0do
+    -> See the Video Description for all the Notes & Command for this Tutorial
+`
