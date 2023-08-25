@@ -1,0 +1,17 @@
+*) Here we will deploy two application:
+    1. MongoDB
+    2. mongo-express
+    
+*) Steps:
+    1. First we will create MongoDB Pod
+        ->  In order to Talk to that Pod we need to create Service and we will going to create and Internal Service it's means that No external requests are allowed to the Pod only Components inside the same cluster can talk to it. './02_MongoDB_Application.png'
+    2. Then we will going to create "Mongo Express" Deployment './
+        -> One we will going to need DB URL of MongoDB so that "Mongo Express" can connect to it.
+        -> Second one is Credentials like 'username' & 'password' of that MongoDb for the authenticate
+        -> so the way we can pass this information is through "Mongo Express" through it's Deployment configuration file through Environment Variables
+        -> So we will going to create ConfigMap that will going to contain DB Url and we will going to create Secret that contain the Credentials and we will going to reference both on that deployment file
+    3. After that we will going to need "Mongo Express" to be accessible to the browser For that we will going to create a External Service, that will allow extern request to talk to the Pod.
+        -> './04_External_Service_for_Mongo_Express.png'
+        -> So the URL will be:
+            - Ip address of Node
+            -> Port of External Service
