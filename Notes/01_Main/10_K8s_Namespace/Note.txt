@@ -1,0 +1,80 @@
+*) What is Namespace:
+    -> In kubernetes cluster you can organize resources in namespaces.
+    -> it's means that you can have multiple resources a namespaces.
+    -> You can think of a namespace as a Virtual cluster inside of a kubernetes cluster.
+    -> By default kubernetes gives you the 4 namespace out of the box.
+        ❯ kubectl get namespace
+            NAME              STATUS   AGE
+            default           Active   13h
+            kube-node-lease   Active   13h
+            kube-public       Active   13h
+            kube-system       Active   13h
+        
+        -> Now let's go through them one by one:
+            1. kube-system: './02_kube-system_namespace.png'
+                -> not meant for you use, Do not create or modify in kube-system.
+                -> the components that are deployed inside the namespace are:
+                    a. System processes
+                    b. Master and kubectl processes
+                    etc...
+            2. kube-public: './03_kube-public_Namespace.png'
+                -> contain the publicly accessible data
+                -> it has a config map that contains cluster information which is accessible even without authentication.
+                -> so of we will do:
+                    -> kubectl cluster-info
+                        -> (we can get some information of cluster)
+            3. kube-node-lease: './04_kube-node-lease_Namespace.png'
+                -> It's holds information about the heartbeats of nodes.
+                -> so each node get's it's object contains the information about that nodes availability
+            4. default: './05_default_Namespace.png'
+                -> this is the namespace that we are going to be using to create resource at the beginning if we have not create the new/custom namespace
+    
+    *) Create Namespace:
+        -> kubectl create namespace <Namespace_name>
+        -> EX: kubectl create namespace my-namespace
+        -> Another way to create namespace is by using namespace configuration file, which is the better way to create namespaces.
+
+    *) Use cases of Namespace: 
+        1. Everything in one namespace
+            -> './06_Why_namespace.png', './07_Why_namespace.png'
+            -> imagine you have default namespace that is create by default and you create every resources inside that same namespace and if you have a complex application, that have multiple deployments which create replicas of many Pods and you have resources like 'services' & 'configMap' etc..., very soon your default namespace will going to be filled with different components and it will be very difficult to have and overview of what's in there especially with multiple user creating resources inside. so better way to use namespace in this case is to group resources into namespaces
+            -> For example you could have a 'Database' namespace where you deploy database and all it's required resources are deployed inside that namespace.
+            -> Another namespace could be 'Nginx-Ingress'
+            -> So it is one way of logically grouping your resources inside you cluster.
+            -> official documentation of kubernetes say not to use namespaces for Smaller projects and upto 10 users.
+            -> but it is a good ideas to group your resource in different namespaces.
+        2. Conflict: Many teams, Same application
+            -> './08_Why_namespace.png'
+            -> Another use case could be if you have multiple teams working on.
+            -> imagine you have a times that is using same cluster. and one team deploy and application called 'my-app deployment' and that deployment have certain configuration
+            -> And another team have deployment which name is same as previous team 'my-app deployment' with different  configuration and they created the deployment and they apply it, then they will override the first team deployment.
+            -> So, to avoid such kind of conflicts again you can use namespaces so that each team can work in their own namespace without disrupting the other.
+        3. Resource Sharing: Staging and Developing
+            -> './09_Resource_Sharing.png', './10_Resource_Sharing.png'
+            -> Let's say you have One cluster and you want to host Staging and development environment into the same cluster and the reason for that is for example if you are using "Nginx Controller" or "Elastic Stack" you can deploy it in one cluster and re-use those component in both "Staging" & "development" environment.
+            -> In that way you don't have to deploy this common resources twice in two different clusters. 
+        4. Resource Sharing: Blue/Green Deployment
+            -> './11_Resource_Sharing.png', './12_Resource_Sharing.png'
+            -> It means that in the same cluster you want to have two different version of Production running.
+            -> So, one that is Active Production and another one will be on the Next Production version.
+            -> And these namespace Two or multiple production version could be using the same Resources in that case as well we can use namespace.
+        
+        5. Access and Resource Limits on Namespace.
+            a.
+                -> './13_Access_and_Resource_Limits_on_Namespaces.png'
+                -> Let's say we have scenario where we have two teams working on the same cluster and each one of them and Each one of them have their own namespace, So in this scenario what we can do is we can give the teams access only their namespaces so that they are only be able to create, update, delete resource in their own namespaces But they should not be able to do any thing to other namespace.
+                -> In this way we restrict and minimize the risk of one team accidentally interfering with another teams works.
+                -> So each teams will work with their own isolated environment.
+
+            b. Limit the Resource that each namespace use:
+                -> './14_Access_and_Resource_Limits_on_Namespaces.png'
+                -> Another thing that we can do is we can limit the resource that each namespace use like: CPU, RAM, Storage Per Namespace.
+                -> If you have a cluster with limited resources that each team share of resources for their application.
+                -> For Per namespace we can define Resource Quota that limit how much CUP, RAM & Storage resources one namespace can use.
+                
+    *) Characteristics that we should consider before deciding how to group and how to use Namespace:
+        1. You can't access most of resource from another Namespace.
+            -> './15_Characteristics_of_Namespace.png'
+            -> For example you have ConfigMap in "Project A" namespace that reference the "DB" service namespace you can't not use that ConfigMap in "Project B" namespace
+            -> For that you have to create the same ConfigMap that also references the "DB" Service
+            -> So, each namespace Must define own ConfigMap
