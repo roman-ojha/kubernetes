@@ -1,4 +1,4 @@
-*) What is Namespace:
+*) Namespace:
     -> In kubernetes cluster you can organize resources in namespaces.
     -> it's means that you can have multiple resources a namespaces.
     -> You can think of a namespace as a Virtual cluster inside of a kubernetes cluster.
@@ -78,3 +78,61 @@
             -> For example you have ConfigMap in "Project A" namespace that reference the "DB" service namespace you can't not use that ConfigMap in "Project B" namespace
             -> For that you have to create the same ConfigMap that also references the "DB" Service
             -> So, each namespace Must define own ConfigMap
+            -> Also, Same apply to Secret of Shared service for that also we have to a create a Secret in Each Namespaces. Where you are going to need that.
+        2. Access Service in Another Namespace.
+            -> './17_Access_Service_in_Another_Namespace.png'
+            -> However the resource that you can share across the namespace is Service.
+            -> So ConfigMap in "Project B" Namespace is references Service "mysql-service" in "database" namespace that will use eventually in a pod.
+            -> And the way that it works is that In ConfigMap Definition In addition to it's name which is in this case 'mysql-service' will have namespace at the end
+                data:
+                    db_url: mysql-service.database
+            -> And using this you can access services form another namespaces
+        3. Components, which can't be create within a Namespace:
+            -> './18_Component_which_Can_not_Be_In_Namespace.png'
+            -> We show that most of the components can be created inside the namespaces But there are some components in kubernetes which they are not Namespaced
+            -> So they will live globally in the cluster
+            -> And you can't isolate them and put then in a Namespace
+            -> EX: Volume or Persistent Volume and Node
+            -> and we have a command that we can use to list out all the components that we can't Namespaced
+                -> kubectl api-resources --namespaced=false
+            -> And also we have command that we can use to list out all the components that we can Namespaced
+                -> kubectl api-resources --namespaced=true
+                
+    *) Create Component in Namespace:
+        -> Be default if we don't provide the namespace on Configuration file it will use the 'default' name space and create those component inside there.
+        -> so './mongo-configmap.yaml' configMap configuration create configMap on default namespace we can check all the component that are applied on given namespace
+        -> for now we will check of the configMap component
+        -> kubectl get <component_name> -n <namespace_name>
+            -> EX: kubectl get configmap -n default
+            
+        -> './19_Create_Component_in_Namespace.png'
+        -> One Way to create configMap on specific namespace you can do:
+            -> kubectl apply -f .\<configMap_filename>.yaml --namespace=<namespace_name>
+                -> EX: kubectl apply -f .\mongo-configmap.yaml --namespace=my-namespace
+        
+        -> Another way to create component inside specific namespace is by providing the 'namespace' on 'metadata'
+            metadata:
+              name: mongodb-configmap
+              namespace: my-namespace
+              
+        -> kubectl get configmap -n my-namespace
+            NAME                DATA   AGE
+            kube-root-ca.crt    1      74m
+            mongodb-configmap   1      2m41s
+
+        
+        -> Note: best practice is to provide namespace inside the configuration file over kubectl command because one it is better documented and second if we are using automated deployment then you will just apply the configuration file and this would be more convenient way to do it.
+        
+
+    *) Change the active namespace with kubens:
+        -> for a scenario where One team get their own namespace and have to work means to create component entirely in that namespace the it would be annoying to have to add '-n <namespace>' tag to every 'kubectl' command
+        -> So in order to make it more convenient there is a way to change this default or active namespace which is 'default' namespace provided by the kubernetes to whatever namespace you want.
+        -> And for that we can use the third party tools like 'kubens': https://github.com/ahmetb/kubectx
+            -> Install windows:
+                -> winget install --id ahmetb.kubectx
+                -> winget install --id ahmetb.kubens
+            -> Command:
+                -> kubens (command to see all the namespace and highlight the active one)
+                -> kubens my-namespace (command to switch to another namespace as active)
+        -> Also we can achieve with bellow command:
+            -> kubectl config set-context --current --namespace=my-namespace
