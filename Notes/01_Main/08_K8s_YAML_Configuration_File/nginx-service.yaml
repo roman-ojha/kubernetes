@@ -2,11 +2,11 @@
 apiVersion: v1
 kind: Service # here we are creating service
 metadata:
-  name: my-service
+  name: nginx-service
 spec:
   selector:
-    app.kubernetes.io/name: MyApp
+    app.kubernetes.io/name: nginx
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 9376
+      targetPort: 8080

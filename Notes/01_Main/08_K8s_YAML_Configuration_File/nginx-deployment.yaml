@@ -12,8 +12,8 @@ spec: # Specification attribute would be specific to the kind of component that 
   selector:
     matchLabels:
       app: nginx
-  template:
-    metadata:
+  template: # Blue print for Pods, so this template configuration is apply to a pod
+    metadata: # template hav it's onw metadata and specification
       labels:
         app: nginx
     spec:

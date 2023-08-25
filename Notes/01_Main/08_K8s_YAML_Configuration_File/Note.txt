@@ -18,3 +18,42 @@
     -> Note that yaml syntax  are strict indentation 
     -> for the indentation we can use yaml online validator or IDE like vscode with extension feature
     -> Store the config file with your code or own git repository
+
+
+*) Blueprint for Pods
+    -> './07_Pod_Template.png'
+    -> So we have understand that Deployment handle all the layer of other stuff like "ReplicaSet", "Pod", "Container" underneath it
+    -> So it is defining under the 'spec -> template' inside deployment configuration file
+    -> it would contain like:
+        -> which image it should be based on?
+        -> which port it should open on?
+        -> the name of the container? etc ...
+
+
+*) Labels & Selectors:
+    -> so we can see on './nginx-deployment.yaml' & './nginx-service.yaml' that:
+        1> 'metadata' part contain labels './08_Labels.png'
+            -> './10_Labels.png'
+            -> in metadata we give component like 'labels' in any key-value pair
+            -> it could be any key value pair, in this case we have use 'app: nginx'
+            -> and this label stick to that component
+            -> So we give Pods created using 'template' Blueprint where labels is 'app: nginx' './11_Labels_Template.png'
+            -> and we tell the deployment to connect and to match all the labels with 'app: nginx' to create that connection './12_Connecting_Deployment_To_Pods.png'
+            -> This is way deployment will know which Pods belong to it.
+        2> 'specification' part contain selectors './09_Selectors.png'
+            -> So deployment have it's own label 'app: nginx''./13_Deployment_Label.png'
+            -> And These 2 label 'deployment' & 'Pod' label are use to apply the service Selector
+            -> So, in service we define a selector that will make a connection between the service and the deployment or its Pods './14_Connecting_Services_to_Deployments.png'
+            -> So service need to know which pods are registered or belongs to that service and that is happening through the selector of that label.
+    *) Ports in Service and Pod:
+        -> So the another this that needs to be configured on Service and Pod is Port.
+        -> so on './nginx-service.yaml' we can see that it have 'ports' configuration
+        -> also './nginx-deployment.yaml' on the container inside of a Pod needs to run on a Port specify on 'ports'.
+        -> So, Service has it's own port where service itself is accessible at.
+        -> So, by any other Service request to ex:'nginx' Service and that request needs to send on 'port: 80' But the Service needs to know which Pod it's should forward the request and also which Port it is listening and that is the 'targetPort' which is in this case '8080', './15_Ports_in_Service_and_Pod.png'
+    
+=> Above explain example are the minimum configuration that we need to do to run deployment and service
+
+
+*) Creating deployment and service:
+    -> 
