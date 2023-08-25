@@ -1,6 +1,7 @@
 *) Here we will deploy two application:
     1. MongoDB
     2. mongo-express
+    -> you can reference the repo: https://gitlab.com/nanuchi/youtube-tutorial-series/-/tree/master/demo-kubernetes-components
     
 *) Steps:
     1. First we will create MongoDB Pod
@@ -42,7 +43,7 @@
 
     -> Now we can created secret we can referenced inside Deployment configuration file
     -> after that we can create the deployment:
-        -> kubectl apply -f .\mongo-deployment.yaml
+        -> kubectl apply -f .\mongo.yaml
 
     !❯ kubectl get all
         NAME                                      READY   STATUS    RESTARTS   AGE
@@ -59,4 +60,16 @@
 
 
 *) Creating Internal Service
-    -> 
+    -> We have create MongoDB service inside same configuration file './mongo.yaml'
+    -> kubectl apply -f .\mongo.yaml
+
+    -> kubectl get all | grep <name_of_component>
+        (If you want to get all the component information for specific deployment)
+        -> EX: kubectl get all | grep mongodb
+            pod/mongodb-deployment-84d7c8b6dd-w47pl   1/1     Running   0          2m53s
+            service/mongodb-service   ClusterIP   10.105.168.215   <none>        27017/TCP   2m53s
+            deployment.apps/mongodb-deployment   1/1     1            1           2m53s
+            replicaset.apps/mongodb-deployment-84d7c8b6dd   1         1         1       2m53s
+            
+
+*) Create "Mongo Express" Deployment & Service & External Configuration:

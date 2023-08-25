@@ -1,3 +1,4 @@
+# https://gitlab.com/nanuchi/youtube-tutorial-series/-/blob/master/demo-kubernetes-components/mongo.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -38,3 +39,20 @@ spec:
                 secretKeyRef:
                   name: mongodb-secret
                   key: mongo-root-password
+# Now we can create Service configuration:
+# for that we can create separate configuration file for Service or we can also include it on the same one
+# In Yaml you can actually put multiple document in one file by separating with '---'
+---
+# Deployment & Service in 1 file, because they belong together.
+# './08_Service_Configuration_File.png'
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+spec:
+  selector:
+    app: mongodb # to connect to the pod through label
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
