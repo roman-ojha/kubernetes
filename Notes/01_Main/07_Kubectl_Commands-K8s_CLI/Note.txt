@@ -1,0 +1,141 @@
+-> So now to interact with Minikube we will use Kubectl to interact with the cluster
+
+*) Commands:
+    -> kubectl get nodes (get all the nodes)
+        NAME       STATUS   ROLES           AGE     VERSION
+        minikube   Ready    control-plane   2m50s   v1.27.4
+        -> here one 'control-plane'(master) Node is running so everything is going to run on that node because this is minikube
+    -> kubectl get pod (to check the pods)
+    -> kubectl get services (get the running services)
+        NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+        kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   12m
+        -> default we have one services running
+        
+    *) Create:
+        -> kubectl create -h (we can see all the docs on create command)
+            Available Commands:
+              clusterrole           Create a cluster role
+              clusterrolebinding    Create a cluster role binding for a particular cluster role
+              configmap             Create a config map from a local file, directory or literal value
+              cronjob               Create a cron job with the specified name
+              deployment            Create a deployment with the specified name
+              ingress               Create an ingress with the specified name
+              job                   Create a job with the specified name
+              namespace             Create a namespace with the specified name
+              poddisruptionbudget   Create a pod disruption budget with the specified name
+              priorityclass         Create a priority class with the specified name
+              quota                 Create a quota with the specified name
+              role                  Create a role with single rule
+              rolebinding           Create a role binding for a particular role or cluster role
+              secret                Create a secret using specified subcommand
+              service               Create a service using a specified subcommand
+              serviceaccount        Create a service account with the specified name
+              token                 Request a service account token
+
+              -> here we can see we don't have a command to create pods because pod is the smallest unit of the kubernetes cluster But, in practice we are not creating pods directly there is an abstraction layer of the pods that is called "Deployment" component that we learn before which is the abstraction over Pods
+        
+        -> kubectl create deployment <Name_of_deployment> --image=image [--dry-run] [options]
+            -> (so here we will create pods using deployment so firstly we will provide the name of the deployment and image like docker container image)
+            -> EX:
+                -> lets create a deployment of 'nginx' image where it will pull the latest nginx image from docker hub:
+                -> kubectl create deployment nginx-depl --image=nginx
+                
+    *) Read
+        -> kubectl get deployment
+            NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+            nginx-depl   0/1     1            0           18s
+                    -> (list of created deployment)
+                    
+            -> now if we will do:
+            -> kubectl get pod:
+                NAME                          READY   STATUS    RESTARTS   AGE
+                nginx-depl-6b7698588c-fpmsh   1/1     Running   0          62s
+                -> here we can see that it create the pod and status is running
+                -> so the name of the pod is create in this format <deployment_name>-<replicaset_id>-<pod_id>
+            
+            -> so when we create a deployment it have all the blueprint to create the pod where it is most basic configuration for deployment(name and the image to use)
+            -> between deployment and pod there is another layer which is automatically managed kubernetes deployment called "replicaset"
+            
+        -> kubectl get replicaset
+            NAME                    DESIRED   CURRENT   READY   AGE
+            nginx-depl-6b7698588c   1         1         1       5m8s
+
+            -> So replicaset is managing the replicas of the Pod, you in practice you don't have to create, delete, update replicaset. you are only working with deployment directly which help us to create/configure deployment blueprint
+            
+            *) Layer of Abstraction:
+                1. Deployment - deployment manages replicaset
+                2. ReplicaSet - manages replicas of that pod
+                3. Pod - it is an abstraction of container
+                4. Container
+                -> So everything bellow Deployment is handled by Kubernetes.
+                -> so the edit of the image have to be on on deployment and not in the pod directly
+                
+    *) Update    
+        -> kubectl edit deployment <Name_of_deployment>
+            -> (to edit deployment)
+            -> EX: kubectl edit deployment nginx-depl
+                -> we will get the autogenerated file of deployment configuration with default values
+                -> and inside the configuration for now we will change the image version to 1.16:
+                    spec:
+                      containers:
+                      - image: nginx:1.16
+            -> now if we will do: 
+                -> kubectl get pod
+                    NAME                          READY   STATUS              RESTARTS   AGE
+                    nginx-depl-6b7698588c-fpmsh   1/1     Terminating         0          15m
+                    nginx-depl-c8ddc48bf-nq8k9    0/1     ContainerCreating   0          11s
+                    -> (here previous pod are going to get terminated and another pod is being created)
+                -> kubectl get pod
+                    NAME                         READY   STATUS    RESTARTS   AGE
+                    nginx-depl-c8ddc48bf-nq8k9   1/1     Running   0          48
+            -> now if we will do:
+                -> kubectl get replicaset
+                    NAME                    DESIRED   CURRENT   READY   AGE
+                    nginx-depl-6b7698588c   0         0         0       17m
+                    nginx-depl-c8ddc48bf    1         1         1       2m3s
+                    -> (previous replicaset doesn't have any pod inside it and new one has been created)
+
+    
+    *) Debugging pods:
+        -> another command is the kubectl logs where it show all the logs that is done by the application
+        !> kubectl logs <pod_name>
+            -> (to see all the logs on that pod)
+            -> to see some logs we will create another deployment from mongodb
+            !❯ kubectl create deployment mongo-depl --image=mongo
+            !❯ kubectl get pod
+                NAME                          READY   STATUS              RESTARTS   AGE
+                mongo-depl-79585f75cf-v8kzp   0/1     ContainerCreating   0          35s
+                nginx-depl-c8ddc48bf-nq8k9    1/1     Running             0          7m38s
+        
+        !> kubectl describe <pod_name>
+            -> (To see the state changes that is happening inside the pod)
+            
+        !> kubectl exec -it <pod_name> -- bin/bash
+            -> (To get the interactive terminal of the application that is running)
+            -> EX:
+                -> kubectl exec -it mongo-depl-79585f75cf-v8kzp -- bin/bash
+                -> here we will see the interactive terminal of the mongodb that is running inside the kubernetes cluster Pod
+                
+            !> exit
+                -> (exit from the terminal)
+
+    *) Delete:
+        !❯ kubectl delete deployment <Name_of_deployment>
+            -> (delete pods replicaset in that case we have to delete deployment)
+
+    *) Apply 
+        => So when ever we are creating the deployment we would rather write all the list of config in command line like:
+            -> name of deployment
+            -> image
+            -> how many pod and replica
+        => the best practice is to specify the configuration on the config file, meaning we will specify
+            -> what component we are creating
+            -> name of that component
+            -> image
+            -> other options
+        => and we will tell kubectl to execute that configuration file for that we will use 'apply' command
+
+        !> kubectl apply -f <config_file_name>.yaml
+            -> For now we will create basic nginx deployment file
+            !❯ new-item nginx-deployment.yaml
+
