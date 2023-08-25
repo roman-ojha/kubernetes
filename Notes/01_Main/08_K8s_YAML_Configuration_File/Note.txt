@@ -56,4 +56,56 @@
 
 
 *) Creating deployment and service:
-    -> 
+    -> kubectl apply -f .\nginx-deployment.yaml
+    -> kubectl apply -f .\nginx-service.yaml
+    
+    ->  kubectl get services
+        NAME            TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+        kubernetes      ClusterIP   10.96.0.1        <none>        443/TCP   155m
+        nginx-service   ClusterIP   10.104.130.184   <none>        80/TCP    46s
+        -> here 'kubernetes' service is the default service that will get create
+        -> here on 'nginx-service' it is listening on PORT '80' as we can see
+        
+    -> kubectl describe service <Name_of_service>
+        -> (using this command we can see all the information also we can validate that the service have the right pods that it forwards it's request to)
+        Name:              nginx-service
+        Namespace:         default
+        Labels:            <none>
+        Annotations:       <none>
+        Selector:          app=nginx
+        Type:              ClusterIP
+        IP Family Policy:  SingleStack
+        IP Families:       IPv4
+        IP:                10.105.80.229
+        IPs:               10.105.80.229
+        Port:              <unset>  80/TCP
+        TargetPort:        8080/TCP
+        Endpoints:         10.244.0.15:8080,10.244.0.16:8080,10.244.0.17:8080
+        Session Affinity:  None
+        Events:            <none>
+        -> (Now inside 'Endpoints' we have three Endpoints because that much amount of pods that we create)
+        -> (and 'Endpoints' must be the Ip address and Ports of the Pods that the service most forward the request to)
+        -> (Using the bellow command to check the IpAddress of the pod we can verify that these Endpoints match with the ip address of all the pods)
+        
+    -> kubectl get pod -o wide
+        -> -o: output
+        -> (using this we can see the more detail version of pods and also see the Ip address of every Pods that it's runs on)
+        NAME                               READY   STATUS    RESTARTS   AGE     IP            NODE       NOMINATED NODE   READINESS GATES
+        nginx-deployment-fb5cffcd6-2k2wx   1/1     Running   0          3m19s   10.244.0.16   minikube   <none>           <none>
+        nginx-deployment-fb5cffcd6-vsg68   1/1     Running   0          3m19s   10.244.0.17   minikube   <none>           <none>
+        nginx-deployment-fb5cffcd6-xqlt4   1/1     Running   0          3m19s   10.244.0.15   minikube   <none>           <none>
+
+
+*) Check the Status:
+    -> kubectl get deployment nginx-deployment -o yaml
+        -> -o yaml: output in yaml format
+        -> (Using this command we can get the updated configuration of the deployment with 'status' which is stored inside the 'etcd' of the Master Node)
+        
+    -> kubectl get deployment nginx-deployment -o yaml > <deployment_result_file_name>.yaml
+        -> Ex: kubectl get deployment nginx-deployment -o yaml > nginx-deployment-result.yaml
+        -> (using this we can store that yaml output into file)
+        -> inside './nginx-deployment-result.yaml' we can see that it added an 'status' as well as other important information related to the Component
+        
+*) Delete Deployment & Service using configuration file:
+    -> kubectl delete -f .\<Deployment_file_name>.yaml (to delete Deployment)
+    -> kubectl delete -f .\nginx-service.yaml (delete service)
