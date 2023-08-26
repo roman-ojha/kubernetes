@@ -13,3 +13,55 @@
     -> Install minikube will automatically install kubectl: https://minikube.sigs.k8s.io/docs/start/
     -> Run with 'hyperv':
         -> minikube start --driver=hyperv
+
+*) Install Kubernetes in Ubuntu server VPS:
+    here's a step-by-step guide to installing Kubernetes on your Ubuntu server:
+    Update Package Lists:
+    Start by updating the package lists on your server:
+        sudo apt update
+
+    Disable Swap:
+        Kubernetes requires disabling swap. You can temporarily disable it with:
+            sudo swapoff -a
+        To make this change permanent, edit the /etc/fstab file and comment out the line containing the swap entry.
+
+    Install Docker:
+        If you haven't already, you can install Docker using the instructions I provided earlier.
+        Install kubeadm, kubelet, and kubectl:
+
+    Run the following commands to install the Kubernetes components:
+        sudo apt install -y apt-transport-https curl
+        curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+        echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+        sudo apt update
+        sudo apt install -y kubelet kubeadm kubectl
+        sudo apt-mark hold kubelet kubeadm kubectl
+
+    Initialize the Cluster:
+        On the master node, initialize the Kubernetes cluster using kubeadm. Run the following command:
+            sudo kubeadm init
+        Follow the instructions at the end of the output to set up your kubectl configuration for your user.
+
+    Set Up Cluster for Your User:
+        Run the following commands to set up your user's kubectl configuration:
+            mkdir -p $HOME/.kube
+            sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+            sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+    Deploy a Pod Network:
+        You need a network add-on to allow communication between pods. A common choice is Calico:
+            kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+
+    Join Worker Nodes (Optional):
+        If you have worker nodes, you can join them to the cluster using the command provided in the output of kubeadm init on the master node.
+
+    Verify Cluster Status:
+        You can check the status of your cluster using:
+            kubectl get nodes
+            
+    *) Why not minikube:
+        Installing Minikube is not necessary if you want to set up a full Kubernetes cluster on your Ubuntu server. Minikube is a tool that provides a lightweight Kubernetes environment for local development and testing. It's typically used when you want to run a single-node Kubernetes cluster on your local machine, isolated from your main development or production environment.
+
+        If your goal is to create a production-like Kubernetes cluster on your Ubuntu server, you can follow the steps I provided earlier to install Kubernetes using kubeadm and set up the cluster with multiple nodes, if needed. This will give you a more realistic environment for testing and deploying applications in a Kubernetes context.
+
+        On the other hand, if you're looking to quickly set up a small Kubernetes environment for local development, you might consider using Minikube on your local machine. However, keep in mind that Minikube is primarily intended for development purposes and might not provide the full features and scalability of a production Kubernetes cluster.
