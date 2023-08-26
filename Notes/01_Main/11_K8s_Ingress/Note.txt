@@ -1,0 +1,31 @@
+*) Ingress:
+    -> https://kubernetes.io/docs/concepts/services-networking/ingress/
+    -> First of all let's imagine Simple kubernetes cluster where you have a Pod of let's say 'my-app' and it's corresponding 'my-app' service. So, first thing is that you want you application to be able to access externally from the browser so for external request to reach to you application. One way to achieve is using External Service. where you can access the application using 'http://<ip_address>:<port>'
+        -> This way could be good for test cases and you want to try something fast but this should not what final production should look like.
+        -> the final product should look like this: 'https://<domain_name>.com' and you want secure connection using https
+    -> './01_Ingress.png'
+    -> The way to achieve above explained problem using Kubernetes "Ingress".
+    -> so you would have 'my-app' ingress and instead of external service you would instead have internal service. you would not open Ip address and port.
+    -> And now if request comes from the browser it will first reach to the ingress and then it will redirect to the internal service and it will eventually end in Pod.
+
+*) External Service Configuration:
+    -> './02_External_Service_YAML.png'
+    
+*) Ingress Configuration File:
+    -> './03_Ingress_Example.png'
+    -> Example: './ingress-example.yaml'
+    
+
+*) Ingress and Internal Service Configuration
+    -> './07_Ingress_and_Service_Backend.png', './08_Ingress_and_Service_serviceName.png', './09_Ingress_and_Service_servicePort.png'
+    
+    -> The different between External service and internal Service is that we don't have the third Port 'nodePort' and 'type' is default not a "LoadBalancer"
+    
+    *) Host and Node:
+        -> './10_Ingress_and_Service_Configuration.png'
+        -> Host should be valid Domain name
+        -> Map domain name to Ip address of the Node that represent an entry point to you kubernetes Cluster. 
+            -> EX: you decide that one of the node will be the entry point to you kubernetes cluster then you have to map Domain to that Ip address
+            
+            -> './11_Ingress_and_Service_Configuration.png'
+            -> Or if you configure a Server Outside of the kubernetes cluster then that will become the Entry point to kubernetes cluster then that will become an entry point to you kubernetes cluster Then you should map 'host' to the ip address of that server

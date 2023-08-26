@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress # Kind would be Ingress
+metadata:
+  name: minimal-ingress
+spec: # In specification where all configuration happen we have so called Routing rules.
+  rules:
+    # So it defines that the domain address all the request on given 'host' must be forwarded to the internal service
+    - host: myapp.com # so 'myapp.com' is the host that user enter into browser and ingress will internally redirect to service.
+      http:
+        paths: # path means the URL path endpoint after the host ex: 'myapp.com/user', here '/user' is the path
+          # and path related rules you can define here
+          - backend: # backend is the target where incoming request will get redirect './07_Ingress_and_Service_Backend.png'
+              serviceName: myapp-internal-service # Name should be correspond to the internal service name './08_Ingress_and_Service_serviceName.png'
+              servicePort: 8080 # The port should be the internal service port './09_Ingress_and_Service_servicePort.png'
+        # and for this configuration we have http protocol, we will also talk about how to configure https connection using Ingress component
