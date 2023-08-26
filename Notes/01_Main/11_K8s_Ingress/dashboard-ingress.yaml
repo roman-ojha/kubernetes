@@ -1,0 +1,21 @@
+# https://kubernetes.io/docs/concepts/services-networking/ingress/#hostname-wildcards
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dashboard-ingress # name of the ingress
+  namespace: kubernetes-dashboard # the namespace needs to be the same namespace as dashboard service and the pod
+spec:
+  rules:
+    - host: dashboard.com # we can get the dashboard inside this host name
+      # NOTE That this 'dashboard.com' is a made up domain name and it is not registered in the www and also we did't configured any that which Ip address this host name will resolve to, this is what we always have to configure
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kubernetes-dashboard # check the service name that kubernetes-dashboard provide for name 'kubernetes-dashboard' is the server that it provide
+                port:
+                  # name: https
+                  number: 443 # and also check the port of that service which is in this case '443'
+

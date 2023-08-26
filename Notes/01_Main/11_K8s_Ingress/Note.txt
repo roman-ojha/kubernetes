@@ -73,3 +73,115 @@
             -> So Non fo the server in K8s cluster would have publicly available Ip address which is very good security practice.
             -> './17_Request_with_Proxy_Server.png'
             -> So The external request will reach to the External Proxy server then that you redirect it to the Ingress Controller and Ingress controller will then decide which Ingress Rule applies to that specific request and then Internal K8 request forwarding to the specific Pod will happen.
+
+
+
+*) Ingress Configuration In Minikube:
+    -> Because we are using Minikube locally the setup will be easy even tho this might now apply to you exact Main Cluster but you would see in practice how all these this work:
+    *) Step 1:
+        -> First Install Ingress Controller using Minikube in command line as Administrator: https://kubernetes.github.io/ingress-nginx/deploy/#minikube
+            -> minikube addons enable ingress
+                -> (This will automatically start the K8s Nginx implementation of Ingress Controller)
+        -> You can use this Controller in production environment as well.
+        -> After that simple command Ingress Controller will be configured in your cluster.
+        -> Now you can find the enable Controller Pod with this command:
+            -> kubectl get pod -n kube-system
+            -> kubectl get pods --all-namespaces | grep ingress
+            -> kubectl get pods -n ingress-nginx
+                NAME                                        READY   STATUS      RESTARTS   AGE
+                ingress-nginx-admission-create-2xrc8        0/1     Completed   0          9m49s
+                ingress-nginx-admission-patch-jc5qd         0/1     Completed   0          9m49s
+                ingress-nginx-controller-7799c6795f-w8mnd   1/1     Running     0          9m49s
+    *) Step 2:
+        -> Now Ingress controller is running in you cluster no we can create Ingress Rule that evaluate
+        -> So, here we will going to create Ingres rules for kubernetes dashboard component:
+            -> Right now I don't have kubernetes dashboard available in my machine so I will going to deploy it:
+            -> https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
+            -> Command:
+                -> kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+            -> Now we will get the kubernetes-dashboard namespace:
+                -> kubectl get namespace
+                    NAME                   STATUS   AGE
+                    default                Active   26h
+                    ingress-nginx          Active   18m
+                    kube-node-lease        Active   26h
+                    kube-public            Active   26h
+                    kube-system            Active   26h
+                    kubernetes-dashboard   Active   10s
+            -> This 'kubernetes-dashboard' right now is not accessible externally
+            -> Because we already have internal Service and Pod.
+            -> we will going to configure Ingress for the dashboard.
+            -> So that we can access it from the browser
+            -> All the component that are available in kubernetes dashboard:
+                -> kubectl get all -n kubernetes-dashboard:
+                    NAME                                             READY   STATUS    RESTARTS   AGE
+                    pod/dashboard-metrics-scraper-5cb4f4bb9c-9z82c   1/1     Running   0          3m9s
+                    pod/kubernetes-dashboard-6967859bff-zrdx9        1/1     Running   0          3m9s
+
+                    NAME                                TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+                    service/dashboard-metrics-scraper   ClusterIP   10.106.239.170   <none>        8000/TCP   3m9s
+                    service/kubernetes-dashboard        ClusterIP   10.106.186.10    <none>        443/TCP    3m9s
+
+                    NAME                                        READY   UP-TO-DATE   AVAILABLE   AGE
+                    deployment.apps/dashboard-metrics-scraper   1/1     1            1           3m9s
+                    deployment.apps/kubernetes-dashboard        1/1     1            1           3m9s
+
+                    NAME                                                   DESIRED   CURRENT   READY   AGE
+                    replicaset.apps/dashboard-metrics-scraper-5cb4f4bb9c   1         1         1       3m9s
+                    replicaset.apps/kubernetes-dashboard-6967859bff        1         1         1       3m9s
+                
+            -> This './dashboard-ingress.yaml' configuration contain the Ingress for Kubernetes dashboard
+            -> After doing the configuration you can then check using:
+                !❯ kubectl get ingress -n kubernetes-dashboard
+                NAME                CLASS   HOSTS           ADDRESS          PORTS   AGE
+                dashboard-ingress   nginx   dashboard.com   172.29.160.189   80      64s
+                -> (It will take some time to assign the Ip address)
+                
+            *) Configure Mapping of Ip address to host name in Windows operating system:
+                -> To configure DNS and hosts file in your Windows machine, you can follow these steps:
+                    1. Open Notepad as an administrator.
+                    2. Click on “File” and then “Open”.
+                    3. Navigate to the following directory: C:\Windows\System32\drivers\etc.
+                    4. Change the file type to “All Files”.
+                    5. Open the file named “hosts”.
+                    6. Add a new line at the end of the file with the following format: 'IP_ADDRESS DOMAIN_NAME;, where IP_ADDRESS is the IP address of your Kubernetes cluster and 'DOMAIN_NAME' is the domain name you want to use to access the Kubernetes Dashboard.
+                    Save the file.
+                
+                -> So here we are saying that if we type 'dashboard.com' in the browser then '172.29.160.189' is the Ip address that it meant to or forward to
+                -> after that we can visit the 'dashboard.com' domain and we can see the kubernetes dashboard running on kubernetes cluster locally
+
+
+
+    *) Default Backend:
+        -> https://kubernetes.io/docs/concepts/services-networking/ingress/#default-backend
+        -> kubectl describe ingress <ingress_name> -n kubernetes-dashboard
+            Name:             dashboard-ingress
+            Labels:           <none>
+            Namespace:        kubernetes-dashboard
+            Address:          172.29.160.189
+            Ingress Class:    nginx
+            Default backend:  <default>
+            Rules:
+              Host           Path  Backends
+              ----           ----  --------
+              dashboard.com
+                             /   kubernetes-dashboard:https (10.244.0.28:8443)
+            Annotations:     <none>
+            Events:
+              Type    Reason  Age                From                      Message
+              ----    ------  ----               ----                      -------
+              Normal  Sync    26s (x2 over 82s)  nginx-ingress-controller  Scheduled for sync
+              
+            -> Here we can see that on 'Default backend' that is map to default http backend it means that whenever request comes to the kubernetes cluster that is not meant to any backend it means that there is not rule defined to map to request to a service then this default backend is used handle that request
+            -> So its means that if you don't have the server created or defined in your cluster then kubernetes will try to forward it to default that could be 404 Not found response
+            -> Ex: if we try to access the endpoint like: 'dashboard.com/roman' which is not configured then it will forward it to the default backend
+            -> This is use so that we can handle and user still can see some massages where it could be the custom page that we can redirect to.
+            *) Configure Default Backend
+                -> './18_Configure_Default_Backend.png'
+                -> here <default> is not the server that we can forward to so we will create our own service and then use 'defaultBackend' to map it:
+                  defaultBackend:
+                    service:
+                      name: my-default-backend-service
+                      port:
+                        name: http
+                -> Now we can create the Service with name 'my-default-backend-service'
