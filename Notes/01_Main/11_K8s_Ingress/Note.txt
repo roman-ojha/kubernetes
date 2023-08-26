@@ -29,3 +29,47 @@
             
             -> './11_Ingress_and_Service_Configuration.png'
             -> Or if you configure a Server Outside of the kubernetes cluster then that will become the Entry point to kubernetes cluster then that will become an entry point to you kubernetes cluster Then you should map 'host' to the ip address of that server
+            
+
+*) Ingress Controller
+    -> https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/
+    -> from this './01_Ingress.png' diagram we can see that we have Pod, Service and it's Corresponding Ingress
+    -> './12_Ingress_Controller.png'
+    -> If you will create the Ingress component alone then that would not be enough for ingress routing rules to work. What you need an implementation of Ingress.
+    -> And the implementation of Ingress is called Controller.
+    -> So Step one is to create "Ingress Controller Pod" which is basically an another Pod or another Set of Pods that runs on your Nodes in you kubernetes cluster and does evaluation and Processing of Ingress Rules.
+    -> The function of Ingress controller is to evaluates all the rules in you cluster and this way to manage all the redirection. so, this would be and entrypoint in the cluster for all the request to the domain or the subdomain rules as configured and this will evaluates all the rules because you may have 50 rules and 50 Ingres component created in you cluster, It will evaluates all the rules and decide based on that which forwarding rules applies for that specific request.
+    -> In order to install implementation of Ingress in you cluster We have many Third-party implementation that we can choose.
+        -> https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/#additional-controllers
+        -> There is One from Kubernetes itself called K8s Nginx Ingress Controller: https://kubernetes.github.io/ingress-nginx
+
+
+*) Environment on which you cluster runs:
+    -> Firstly you have to consider the environment that you kubernetes cluster is running.
+    *) Cloud Provider:
+        -> If we are using Cloud Service Provider like: 'AWS', 'Google Cloud', 'Linode' etc...
+        -> The have out of the box kubernetes solutions or the have their own virtualized load balancer etc...
+        -> So you cluster configuration cloud look like this:
+        -> So you would have a "Cloud Load Balancer" that is specifically implemented by that Cloud Provider
+        -> And external Request that is coming from the browser will hit the "Cloud Load Balancer" and that Load balancer will then redirect request to the Ingress Controller.
+        -> This is not the only way to do it even in Cloud environment. You can configure it in couple of different ways.
+        -> But his si out of the most common
+        -> And the advantage of using Cloud Provider is that You don't have to implement Load balancer by yourself.
+        -> and in minimum effort you would have LoadBalancer up on running and receiving request and forward those request to you kubernetes cluster.
+    
+    *) Bare Metal:
+        -> './14_Bare_Meta.png'
+        -> If you are deployment Kubernetes cluster on a Bare Metal environment then you have to do that part you self
+        -> Basically you have to configure some kind of entry point to you Kubernetes cluster you self.
+        -> There is different way to do this as well:
+            -> https://kubernetes.github.io/ingress-nginx/deploy/baremetal/
+
+        *) Proxy Server:
+            -> './15_Proxy_Server.png', './16_Proxy_Server.png'
+            -> But generally Either inside of cluster or Outside as a Separate server you have to provide and entrypoint and one of those types is an External "Proxy Server" which can be a Software or Hardware Solution that will take a role of that Load balancer and Entry point of you cluster
+            -> So it means that you would give this a public Ip address and you would open the port in order for the request to be accepted
+            -> The this proxy server then will act as an entry point to you cluster.
+            -> So this Proxy server will be the only one that can access externally.
+            -> So Non fo the server in K8s cluster would have publicly available Ip address which is very good security practice.
+            -> './17_Request_with_Proxy_Server.png'
+            -> So The external request will reach to the External Proxy server then that you redirect it to the Ingress Controller and Ingress controller will then decide which Ingress Rule applies to that specific request and then Internal K8 request forwarding to the specific Pod will happen.
