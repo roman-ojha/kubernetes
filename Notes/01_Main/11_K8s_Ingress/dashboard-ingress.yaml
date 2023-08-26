@@ -1,10 +1,17 @@
 # https://kubernetes.io/docs/concepts/services-networking/ingress/#hostname-wildcards
+# https://gitlab.com/nanuchi/youtube-tutorial-series/-/blob/master/kubernetes-ingress/dashboard-ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: dashboard-ingress # name of the ingress
   namespace: kubernetes-dashboard # the namespace needs to be the same namespace as dashboard service and the pod
+  annotations:
+  kubernetes.io/ingress.class: "nginx"
 spec:
+  tls: # configure TLS certificate - https//
+    - hosts:
+        - myapp.com
+      secretName: myapp-secret-tls # this is the reference of secret that we have to create in a cluster that holds that TLS Certificate
   rules:
     - host: dashboard.com # we can get the dashboard inside this host name
       # NOTE That this 'dashboard.com' is a made up domain name and it is not registered in the www and also we did't configured any that which Ip address this host name will resolve to, this is what we always have to configure

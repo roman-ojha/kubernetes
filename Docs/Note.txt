@@ -11,3 +11,5 @@
             -> Replace <another_context> with the name of another context if you have one.
 
     -> Install minikube will automatically install kubectl: https://minikube.sigs.k8s.io/docs/start/
+    -> Run with 'hyperv':
+        -> minikube start --driver=hyperv

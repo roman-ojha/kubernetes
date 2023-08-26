@@ -185,3 +185,105 @@
                       port:
                         name: http
                 -> Now we can create the Service with name 'my-default-backend-service'
+                
+*) Other UseCases of Ingress
+    1) Defining Multiple Path of the same host:
+        -> Consider Example:
+            -> Google has one domain but many services offers, for example if you have google account you can use it for gmail, calender etc ...
+            -> All of these are separate applications that are accessible from the same domain.
+        -> So consider you also have use case where you have two separate application running on like: '/analytics' & '/shopping' which is part of the same ecosystem but you still want then to have in separate urls.
+        -> './19_Multiple_Path_for_same_Host.png'
+        -> So, in 'rules' section you can define host and in 'paths' section you can define multiple paths that use different services
+            apiVersion: networking.k8s.io/v1
+            kind: Ingress
+            metadata:
+              name: simple-fanout-example
+              namespace: kubernetes-dashboard
+            spec:
+              rules:
+                - host: myapp.com
+                  http:
+                    paths:
+                      - path: /analytics
+                        backend:
+                          service:
+                            name: analytics-service
+                            port:
+                              number: 3000
+                      - path: /shopping
+                        backend:
+                          service:
+                            name: shopping-service
+                            port:
+                              number: 8080
+                              
+    2) Multiple sub-domains or domains
+        -> Some company instead of using urls to make different application accessible they use subdomains 
+        -> So instead of having 'http://myapp.com/analytics' they create subdomain 'http://analytics.myapp.com
+        -> './20_Multiple_sub-domain_or_domains.png', './21_Multiple_sub-domain_or_domains.png'
+        -> so if you have you application configure that way you configuration will look like this bellow where rather then having multiple path on one host we will create multiple host with 1 path each host represent a subdomain
+            apiVersion: networking.k8s.io/v1
+            kind: Ingress
+            metadata:
+              name: simple-fanout-example
+              namespace: kubernetes-dashboard
+            spec:
+              rules:
+                - host: analytics.myapp.com
+                  http:
+                    paths:
+                        backend:
+                          service:
+                            name: analytics-service
+                            port:
+                              number: 3000
+                - host: shopping.myapp.com
+                  http:
+                    paths:
+                        backend:
+                          service:
+                            name: analytics-service
+                            port:
+                              number: 3000
+
+
+*) Configure TLS Certificate - https//
+    -> https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/
+    -> before we walk about http request but it is easy to configure https forwarding ingress
+    -> for that we just have to define 'tls' attribute above of the rules section
+        apiVersion: networking.k8s.io/v1
+        kind: Ingress
+        metadata:
+          name: simple-fanout-example
+          namespace: kubernetes-dashboard
+        spec:
+          tls: # configure TLS certificate - https//
+            - hosts:
+                - myapp.com
+              secretName: myapp-secret-tls # this is the reference of secret that we have to create in a cluster that holds that TLS Certificate
+          rules:
+            - host: myapp.com
+              http:
+                paths:
+                  - path: /analytics
+                    backend:
+                      service:
+                        name: analytics-service
+                        port:
+                          number: 3000
+    
+    -> and the secret that it would reference would be like this:
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: myapp-secret-tls
+        data:
+          tls.crt: <base64_encoded_cert>
+          tls.key: <base64_encoded_key>
+          mongo-root-password:
+        type: kubernetes.io/tls
+
+        => Rules for tls secret './23_Rules_for_TLS_Secret.png'
+            1. Data keys needs to be "tls.crt" and "tls.key"
+            2. Value are file contents Not file paths/locations
+            3. Secret component must be in the same namespace as the Ingress component
