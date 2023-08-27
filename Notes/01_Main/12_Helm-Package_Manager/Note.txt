@@ -1,0 +1,60 @@
+*) Helm:
+    -> https://helm.sh/docs/
+    -> It is a Package Manager for Kubernetes
+    -> It is a convenient way for packaging Kubernetes yaml files and distributing in public and private repositories registry.
+    -> EX:
+        -> './01_Helm_Intro.png'
+        -> Let's way you have deployed you application in Kubernetes cluster and you want to deployed ELASTIC Search additionally in you cluster that you application will use to collect it's logs.
+        -> In order to deploy Elastic Stack in your Kubernetes cluster you would need a couple of Kubernetes components.
+            -> So you would need:
+                -> Stateful Set for stateful apps like databases
+                -> You would need a ConfigMap with an external configuration
+                -> You would need a Secret for credentials
+                -> you would need to create Kubernetes User with permissions
+                -> Also need to create couple of services
+        -> So if you where to create all of these files manually by searching for them each one on the internet is time consuming, and to collect, test and to try out might take couple of times.
+        -> Because Elastic Stack deployment is pretty much standard across all the clusters Other people have to go through the same.
+        -> So it make perfect sense that some created this yaml files ones and package them up and made it available some so that other people also can use the same deployment in their Kubernetes cluster
+        -> And that bundle of YML files is called "Helm Charts"
+    *) Helm Chart:
+        -> Bundle of YAML files
+        -> Create you own Helm Charts
+        -> Commonly used deployments like: Database Apps, Elasticsearch, MongoDB, MySQL, Monitoring Apps.
+        -> And Monitoring application like: Promotheus
+        -> all these have Charts available in some Helm repository
+        -> Search in Helm Hub here: https://artifacthub.io/packages/search
+        -> NOTE: now helm chart is deprecated and used as "Artifact Hub"
+        
+        *) Public registries:
+            -> available for everyone
+        *) Private registries:
+            -> share in organizations and not publicly
+
+    -> After creating Helm Chart we can push them in Helm repository
+    -> Or you can use existing one by downloading from the repository
+    
+    *) UseCases of Helm:
+        1) Templating Engine:
+            -> Another Feature of Helm chart is it is Templating Engine:
+            -> EX:
+                -> './02_Templating_Engine.png'
+                -> Imagine you have an application that is made up of multiple microservices and you are deploying all of them in kubernetes cluster and deployment and services of each of those microservices pretty much the same with the only different is the application name app version or docker image & it's version are different
+                -> with out helm you have to write separate YML file configuration for each of those microservices.So, you would have multiple different deployment service files each one has it's own application name version defined
+            -> Because the only different between those YML files are just couple of lines or couple of values, using helm you can define:
+                -> './03_Templating_Engine.png'
+                -> common Blueprint for all the microservices
+                -> Dynamic value are replaced by placeholders
+            -> './04_Templating_Config.png'
+            -> And that would be a template file, and the for the value you will take those value from external configuration
+            -> That external configuration comes from the external YML file called 'values.yaml'
+            -> './05_Templating_Values.png' on this image we can see that '.Values' is an Object
+            -> You have to define values via Yaml file or with '--set' flag
+                
+        2) Same Application across different environments(clusters)
+            -> Let's say that you have a microservices application that you want to deploy on development, Staging and production clusters.so, instead of deployment the individual files separately in each cluster you can package them up to make you own application chart that will have all necessary yaml files which that particular deployment need and you can use that to redeploy the same in different kubernetes cluster environments in one commands.
+
+    
+            
+
+    *) Commands:
+        -> helm search <keyword> (to search other available packages)
