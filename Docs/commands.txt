@@ -50,3 +50,12 @@
 *) Kubectx & kubens to switch between active namespace: https://github.com/ahmetb/kubectx (install first)
     -> kubens (command to see all the namespace and highlight the active one)
     -> kubens my-namespace (command to switch to another namespace as active)
+
+
+*) Helm Commands:
+    -> helm search <keyword> (to search other available packages)
+    -> helm install <chart_name> (to install helm chart)
+    -> helm install --values=my-values.yaml <chart_name> (to install helm chart with overridden value from another file)
+    -> helm install --set version=2.0.0 (install helm chart with setting value from command line and overriding it)
+    -> helm upgrade <chart_name>
+    -> helm rollback <chart_name>

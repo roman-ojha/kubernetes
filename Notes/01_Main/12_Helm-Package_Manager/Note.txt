@@ -53,8 +53,50 @@
         2) Same Application across different environments(clusters)
             -> Let's say that you have a microservices application that you want to deploy on development, Staging and production clusters.so, instead of deployment the individual files separately in each cluster you can package them up to make you own application chart that will have all necessary yaml files which that particular deployment need and you can use that to redeploy the same in different kubernetes cluster environments in one commands.
 
+        3) Release Management:
+            -> https://youtu.be/X48VuDVv0do?t=9347
+            -> './11_Release_Management.png', './12_Release_Management.png', './13_Release_Management.png'
+
     
+    *) Helm Chart Structure:
+        - mychart/
+            |
+            |- Chart.yaml
+            |
+            |- values.yaml
+            |
+            |- charts/
+            |
+            |- templates/
+
+        -> 'mychart' name of the chart
+        -> 'Chart.yaml' file contains meta information about the chart, like name, version, dependencies etc...
+        -> 'values.yaml' where all the values are configured, this would actually be the default value that you can override letter
+        -> 'charts' folder have charts dependencies inside, meaning if these charts depends on other chards then those charts dependencies will be stored inside here.
+        -> 'templates' folder contain actual template files.
+        -> to deploy use 'helm install <chart_name>' command to deploy in kubernetes then the template files will be filled with the values from values.yaml producing valid kubernetes manifest and then it will be deployed into kubernetes.
+        -> Optionals files:
+            -> Readme
+            -> License
+
+    *) Values Injection in template files:
+        *) Override the default value:
+            1) 1st Way
+                -> './08_Value_Injection.png', './09_Value_Injection.png'
+                -> One way is using command where you can provide alternative yaml values file and these all value will get merge and then create the '.Values' Object:
+                    -> helm install --values=my-values.yaml <chart_name>
+            2) 2nd Way:
+                './10_Value_Injection.png'
+                -> you can set value with '--set' flag
+                    -> helm install --set version=2.0.0
+
+            
             
 
     *) Commands:
         -> helm search <keyword> (to search other available packages)
+        -> helm install <chart_name> (to install helm chart)
+        -> helm install --values=my-values.yaml <chart_name> (to install helm chart with overridden value from another file)
+        -> helm install --set version=2.0.0 (install helm chart with setting value from command line and overriding it)
+        -> helm upgrade <chart_name>
+        -> helm rollback <chart_name>
