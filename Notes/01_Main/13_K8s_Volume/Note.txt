@@ -51,7 +51,58 @@
                 -> Type of Persistent Volume: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#types-of-persistent-volumes
             
             -> NOTE that Persistent volume are not Namespaced meaning they ae accessible to the whole cluster and unlike other component that we show before like "Pods" & "Services" They are not in any Namespace The are available to the whole cluster with any Namespace.
+
+        *) Persistent Volume Claim(PVC)
+            -> https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims
+            -> './16_Persistent_Volume_Claim.png'
+            -> Based from the information provided by the developer team that what type of storage their application would need and the developer will then know that the storage is their and can be use by the application. for that developer have to explicitly configure the application YAML file to use those persistent volume component. In other words application have to claim that Persistent Volume storage. and you do that using the another component of kubernetes called "Persistent Volume Claim"
+            -> './17_Persistent_Volume_Claim.png'
+            -> It is also created using YAML configuration.
+            './18_Persistent_Volume_Claim.png'
+            -> PVC claim the volume with certain Size and capacity that we have to provide in YAML file and the accessType like: 'ReadOnly', 'ReadWriteOnce'.
+            -> And what very persistent value match the criteria or satisfy the claim will be used for the application.
+                -> './18_Persistent_Volume_Claim.png'
+            -> Also we have to  know to use that claim on the Pods configuration. so now all the Pods and the all the container inside the Pod will have access to that Persistent Volume Storage.
+            *) Level of Volume Abstraction:
+                -> './20_Persistent_Volume_Claim.png'
+                1. Pod Request the volume through the PV claim
+                2. Claim tri to find the volume that satisfy the claim in cluster.
+                3. Volume has the actual storage backend
+            
+            -> NOTE that the claim need to exist on the same namespace as the Pod which is using the claim.
+
+        *> Who create the Persistent Volumes and when?
+            -> './13_Persistent_Volume.png'
+            -> Persistent Volume already needs to on the cluster when the Pod that uses it is when created.
+            *) Different Roles in K8s User:
+                -> './14_Different_Roles_in_K8s.png'
+                1. K8s Administrator:
+                    -> Who sets up the cluster and maintains it and make it sure that the cluster have enough resources.
+                    -> They are usually System administrator, DevOps engineer in a company.
+                    -> So, Kubernetes administrator is the one who configure the Actual Storage. meaning the NFS server Storage is there and configured or may be Create and configure cloud storage that will be available for the cluster and Second Create the PersistentVolume component from these storage backends.
+                    -> './15_K8s_Administrator.png'
+                    -> './23_Level_of_Volume_Abstraction.png'
+                    -> Admin Role have to create the Persistent Volume
+                2. K8s User:
+                    -> This use Deploys the application application in the cluster either directly or through CI pipeline
+                    -> These are mostly Developer, DevOps team who create the application and deploy them.
+                    -> And User Role create Claim on That Persistent Volume using Pod.
+                    -> As a User/Developer Who mostly deploy the in the cluster You don't care about where the actual storage is, You know you want the database to have a persistent and and where the data live on the cluster or Cloud Storage as long as the data is safely stored and also if it is a direct storage file like on Directory You don't care where the data lives.
+                    -> They don't create about Setting Up the actual storage.
+                    -> So, the make a claim for Storage using PVC and assume that the cluster has Storage resources already their and this makes deploying the application 
+
+        -> './21_Level_of_Volume_Abstraction.png'
+        => So, once the pod finds the matching persistent volume through the Persistent Volume Claim(PVC), the volume then mounted into the Pod and then that Volume can be mounted into the Container inside the Pod.
+        -> And you can have multiple container inside the pod where you can decide to mount this volume in all the container or some of those.
+        -> './22_Level_of_Volume_Abstraction.png'
+        -> So now the container and the application inside the container can read/write to the Storage. and when the Pod dies the new one get's created, it will have access to the same storage and see all the changes that the previous Pod container made.
+                    
             
     
     *) Local vs Remote Volume Types:
+        -> './12_Local_vs_Remote_volume_Types.png'
         -> Each volume type has it's own use case.
+        -> But local volume types violate 2, 3 requirement for data persistent that we talk on './03_Storage_Requirement.png'
+            1. Being not tied to 1 specific node
+            2. Won't service on cluster crashes.
+        -> Because of this reason you should alway consider using Remote DB persistence.
