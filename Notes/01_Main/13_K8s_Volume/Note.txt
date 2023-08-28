@@ -1,0 +1,57 @@
+*) K8s Volume:
+    -> https://kubernetes.io/docs/concepts/storage/volumes/
+    *) Different component of kubernetes storage:
+        1. Persistent Volume
+            -> https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+        2. Persistent Volume Claim
+        3. Storage Class
+            -> https://kubernetes.io/docs/concepts/storage/storage-classes/
+            
+    -> EX:
+        -> Consider a case where you have a mysql database Pod which you application uses, data get add, updated, deleted from the database. but when you restart the Pod all those changes will be gone.
+    -> Kubernetes doesn't give you data persistence out of the box, for that you have to manually configure for those application whose data needs to save when pod restart.
+    -> './01_Volumes.png'
+    -> So for that we need a storage that doesn't depend on the pod lifecycle. so still if that pod dies and new one will created then the new one can access those data that previous pod left of.
+    -> './02_Volume.png'
+    -> Also you don't know on which Node Pod restart so your storage also needs to be available to all nodes not just one specific one. So, whenever New pod try to read existing data then there should be up-to date is there in any Node in cluster.
+    *) Storage requirement:
+        -> './03_Storage_Requirement.png'
+        1. Storage that doesn't depend on the pod lifecycle.
+        2. Storage must be available on all nodes.
+        3. Storage needs to survive even if cluster crashes.
+
+    
+    *) Another Use Case:
+        -> Another Use case for persistence storage which is not for database is Directory may be you have an application that write and reads files from pre configured Directory.
+        -> This code you session files for you application, or configuration files etc...
+        -> We can configure any of these type of storage using kubernetes component called "Persistent Volume"
+        
+    *) Persistent Volume:
+        -> Think Persistent Volume as a cluster resource like Ram, CPU. that is used to store data.
+        -> It can be created using YAML file.
+        -> for that we have to use 'kind: PersistentVolume' & 'storage: 5Gi'
+        -> Persistent Volume is just an abstract component It must take the storage from the actual physical storage, like: Local Hard disk from the cluster Node or external NFS Servers outside of the cluster or Cloud-Storage like: AWS Block storage, Google cloud storage
+        -> './05_Persistent_Volume.png'
+        *> Where does this storage come from?
+            -> Kubernetes doesn't not care about you actual storage, It gives you "Persistent Volume" Component as an interface to the actual storage that we as a maintainer or administrator have to take care of.
+            -> So we have to decide what type of storage cluster you services or application would need and create and manage then by yourself.
+            -> Managing means do backups and make sure that they won't get corrupt.
+            -> './06_Persistent_Volume.png'
+            -> This of an Kubernetes Storage as an External Plugins to you cluster. where it a local storage on the actual node where cluster is running or a remote storage.
+            -> './07_Persistent_Volume.png'
+            -> And there could be multiple storage that is configured for you cluster where One application in you cluster uses Local storage another one uses an NFS server and or another one uses some cloud Storage.
+            -> './08_Persistent_Volume_YAML_Example.png'
+            -> By creating persistent volume we can use the actual physical storage that we will specify on the 'spec' section in YAML file.
+            -> In PersistentVolume specification section we an define which storage backend we want to use to create that storage resource for you application.
+            -> In './09_Persistent_Volume_YAML_Example.png' example we have specify the NFS Storage with the amount that we need
+            -> './10_Persistent_Volume_Google_Cloud_Example.png' here we provide Google cloud backend.
+            -> Depending on the storage type on the storage backend some of the specification would be Different because that is specific to the storage type..
+            -> './11_Persistent_Volume_Local_Storage_Example.png' this is the example of a Local storage that is on the Node itself which has additional 'nodeAffinity' attribute.
+            -> TODO: you have to learn about all of these storage volume later.
+                -> Type of Persistent Volume: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#types-of-persistent-volumes
+            
+            -> NOTE that Persistent volume are not Namespaced meaning they ae accessible to the whole cluster and unlike other component that we show before like "Pods" & "Services" They are not in any Namespace The are available to the whole cluster with any Namespace.
+            
+    
+    *) Local vs Remote Volume Types:
+        -> Each volume type has it's own use case.
