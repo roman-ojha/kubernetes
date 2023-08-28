@@ -106,3 +106,14 @@
             1. Being not tied to 1 specific node
             2. Won't service on cluster crashes.
         -> Because of this reason you should alway consider using Remote DB persistence.
+        
+
+*) ConfigMap and Secret:
+    -> Both of them are local volume But unlike the rest these two are not created view PV and PVC rather they are own component and managed by Kubernetes.
+    -> Consider a case where you want a configuration file for you Pod application or you need a certificate file for you application in both cases you need a file available to you Pod.
+    -> './24_ConfigMap_and_Secret_Volume.png', './25_ConfigMap_and_Secret_Volume.png'
+    -> For that you create ConfigMap and/or Secret component & then Mount that into you Pod/Container same way that we would mount PersistentVolume
+
+
+*) Different volume type in a Pod:
+    -> Start from here: https://youtu.be/X48VuDVv0do?t=10420
