@@ -6,6 +6,7 @@
         2. Persistent Volume Claim
         3. Storage Class
             -> https://kubernetes.io/docs/concepts/storage/storage-classes/
+        -> Others: https://kubernetes.io/docs/concepts/storage/
             
     -> EX:
         -> Consider a case where you have a mysql database Pod which you application uses, data get add, updated, deleted from the database. but when you restart the Pod all those changes will be gone.
@@ -116,4 +117,25 @@
 
 
 *) Different volume type in a Pod:
-    -> Start from here: https://youtu.be/X48VuDVv0do?t=10420
+    -> Pod can use multiple Volume types simultaneously.
+    -> Let's say that you have an elastic Search 'elastic-app' Pod running in you cluster which:
+        -> './28_Different_Type_of_Volume_in_a_Pod.png', './29_Different_Type_of_Volume_in_a_Pod.png', './30_Different_Type_of_Volume_in_a_Pod.png'
+        1> needs an configuration file mount through a config map
+        2> needs a certificate mounted as a secret
+        3> and it needs database storage which is Backed with awsElasticBlockStorage.
+        -> In this case you can configure all three in Deployment
+
+
+*) Storage Class:
+    -> './31_Storage_Class_Intro.png'
+    -> Consider cluster with 100's of application where things get deployed daily and storage made for this application, Developer needs to ask admin to create Persistent Volume they need before deploying application. Then admin may have to request the storage from cloud or storage provider and create 100 of Persistent Volumes for all application that needs storage manually, and that can be time consuming.
+    -> To make this process efficient there is a another component in K8s Persistent called "Storage Class"
+    -> It create or prevision Persistent volume dynamically whenever PVC claims it, this is where creating and provisioning cluster may be automated.
+    -> It is also created using YAML configuration file.
+    -> So, we define the Storage backend in PVC now we have to define in Storage class component using the 'provisioner' attribute where it tells kubernetes which provisioner to be used for a specific storage platform or a cloud provider to create PVC.
+    -> Each Storage backend has own provisioner which is prefix with 'kubernetes.io' where these internal provisioner where there are also other external provisioner where for that you have to explicitly find and use that in you storage class.
+    -> './32_Storage_Class.png', './33_Storage_Class.png'
+
+    *) Use Storage class in Pod:
+        -> It is requested by PVC.
+        -> './33_Storage_Class.png', './33_Storage_Class.png'
