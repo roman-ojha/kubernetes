@@ -20,6 +20,46 @@
     -> minikube delete
     -> minikube start --vm-driver=Hyper-V
 
+
+*) If erro came like this:
+    *) Error:
+        !❯ minikube status
+        W0831 09:18:41.735148   10484 main.go:291] Unable to resolve the current Docker CLI context "default": context "default": context not found: open     C:\Users\razzr\.docker\contexts\meta\37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f\meta.json: The system cannot find the path specified.
+
+    *) Solution:
+            The error you're encountering is similar to the previous one and is related to Docker CLI context resolution in Minikube. It seems that Minikube is having trouble resolving the Docker CLI context named "default."
+            
+            Here are the steps you can take to potentially resolve this issue:
+            
+            Check Docker Contexts: First, check your Docker contexts to see if the "default" context is set. Open a terminal and run:
+            
+                docker context ls
+            If you don't see a "default" context listed, you might need to set it or specify an existing context that you want Minikube to use.
+            
+            Set Default Docker Context (Optional): If you want to set the "default" context, you can do so using the following command:
+            
+                docker context use default
+            Replace "default" with the name of the desired Docker context.
+            
+            Update Minikube Config: Since Minikube references the Docker context, you might need to update Minikube's configuration to point to the correct Docker context. Open a terminal and run:
+            
+                minikube config set driver docker
+                minikube config set driver virtualbox
+            This sets Minikube to use the "docker" driver and then switches it back to the "virtualbox" driver. You can adjust the driver based on your setup.
+            
+            Restart Minikube: After updating the Minikube configuration, restart Minikube:
+                minikube stop
+                minikube start
+            This will stop and then start Minikube using the updated configuration.
+            
+            Check Docker Context in Minikube: Finally, run the following command to verify that Minikube is using the correct Docker context:
+        
+                minikube ssh "docker context ls"
+            This should show you the active Docker context within the Minikube VM.
+            
+            By following these steps, you should be able to resolve the issue related to Docker context resolution in Minikube. If you continue to experience issues, ensure that your Docker and Minikube installations are up-to-date, and consider checking for any specific issues related to Docker and Minikube compatibility with your operating system.
+
+
 *) Install Kubernetes in Ubuntu server VPS:
     here's a step-by-step guide to installing Kubernetes on your Ubuntu server:
     Update Package Lists:
