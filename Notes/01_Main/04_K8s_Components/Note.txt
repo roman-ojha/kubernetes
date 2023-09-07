@@ -38,7 +38,7 @@
     -> So, let's say that we have to db service called 'mongo-db-service' that we use to do a communication with the database
     -> So, To configure these database endpoint or urls We usually use build image of the application, But if the endpoint of the service or the service name changed to let's say 'mongo-db' you would have to adjust those url into the application, So usually you would have to re-build the application with the new version and you would have to push it to the repository and you would have to pull that image in you pod and restart the whole thing.
     -> So for that purpose kubernetes have component called 'ConfigMap'
-    -> What it does is you external configuration fo you application.
+    -> What it does is your external configuration for your application.
     -> So ConfigMap map usually contain configuration data like Urls of database or some other services that it use and in kubernetes you just connected to the "Pod". So, the pod get the data that "ConfigMap" Contains
     -> So now if you change the name of the service, You just adjust the ConfigMap and that's it.
     *) Secret:
@@ -50,7 +50,7 @@
     -> So let's say that we have this database Pod that our application uses, and it have some data in this setup if the database Container or the Database Pod restarted the database would be no longer there.
     -> That would be a Problem because we want our data to be persistent for long term.
     -> The way to achieve is using Kubernetes "Volumes"
-    -> Volume attach physical store on a hard drive to you pod or then the storage could be either on you local machine meaning on the same Server node where the pod is running or it could be on the remote storage meaning outside of the kubernetes cluster it could be cloud storage or local storage which is not part of the kubernetes cluster, you just have an external reference to it.
+    -> Volume attach physical store on a hard drive to your pod or then the storage could be either on you local machine meaning on the same Server node where the pod is running or it could be on the remote storage meaning outside of the kubernetes cluster it could be cloud storage or local storage which is not part of the kubernetes cluster, you just have an external reference to it.
     -> So now if the database container or pod restarted then all the data would be there persistent.
     -> This Storage is like a External hard drive plug into the kubernetes cluster because K8s doesn't manage data persistent.
 
