@@ -1,12 +1,12 @@
 # https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service
 apiVersion: v1
-kind: Service # here we are creating service
+kind: Service # here we are creating service component
 metadata:
-  name: nginx-service
+  name: nginx-service # Name of the service
 spec:
   selector:
-    app: nginx
+    app: nginx # should match the label that we define on deployment so that this service will then bind to the deployment pod
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 8080
+      port: 80 # Service port that we can use to access the Pod Service through internal K8s cluster network
+      targetPort: 8080 # Pod/Container port that server need to forward request to

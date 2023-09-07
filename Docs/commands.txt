@@ -17,6 +17,7 @@
 -> kubectl logs <pod_name> (to see all the logs on that pod)
 -> kubectl describe <pod_name> (To see the state changes that is happening inside the pod)
 -> kubectl exec -it <pod_name> -- bin/bash (To get the interactive terminal of the application that is running)
+-> kubectl exec -it <pod_name> -- sh (to get the intefactive shell terminal of the running pod container)
 -> kubectl delete deployment <Name_of_deployment> (delete deployment)
 -> kubectl delete service <Name_of_service> (delete service)
 -> kubectl apply -f <config_file_name>.yaml (to create service, deployment or secret from the configuration file)

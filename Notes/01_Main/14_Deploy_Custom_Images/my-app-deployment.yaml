@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: romanojha-my-app
+  labels:
+    app: ro-my-app
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: ro-my-app
+  template:
+    metadata:
+      labels:
+        app: ro-my-app
+    spec:
+      containers:
+        - name: my-app
+          image: romanojha/my-app:latest # this is the image that I have push into dockerhub
+          ports:
+            - containerPort: 3000

@@ -111,6 +111,7 @@
             -> (To see the state changes that is happening inside the pod)
             
         !> kubectl exec -it <pod_name> -- bin/bash
+        OR: !> kubectl exec -it <pod_name> -- sh
             -> (To get the interactive terminal of the application that is running)
             -> EX:
                 -> kubectl exec -it mongo-depl-79585f75cf-v8kzp -- bin/bash

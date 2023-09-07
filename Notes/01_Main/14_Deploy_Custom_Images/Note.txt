@@ -1,0 +1,4 @@
+-> To deploy you custom appllication images you need to first create the image using 'Dockerfile'
+-> and then build the image using 'build' command
+-> and the push that into the public/private repository like for now we will going to push into dockerhub public repo
+-> after pushing the image in repository we can easily be able to fetch that image on deployment configuration
