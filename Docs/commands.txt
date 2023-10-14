@@ -47,6 +47,7 @@
 -> kubectl -n <namespace_name> delete <component> <name_of_component> (delete component from the specific given namespace)
 -> kubectl get ingress -n kubernetes-dashboard (command to get the list of ingress on specific namespace)
 -> kubectl delete -f .\dashboard-ingress.yaml (delete component with given file)
+-> kubectl scale deployment --replicas=<number_of_replicas> <name_of_deployment> (scale the number of pods)
 
 *) Kubectx & kubens to switch between active namespace: https://github.com/ahmetb/kubectx (install first)
     -> kubens (command to see all the namespace and highlight the active one)
