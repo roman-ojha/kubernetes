@@ -54,6 +54,10 @@
 -> kubectl delete -f .\dashboard-ingress.yaml (delete component with given file)
 -> kubectl scale deployment --replicas=<number_of_replicas> <name_of_deployment> (scale the number of pods)
 
+-> kubectl config view (get the kubectl configuration information like the cluster that is added etc...)
+-> kubectl get nodes (get all the nodes configured on kubectl)
+
+
 *) Kubectx & kubens to switch between active namespace: https://github.com/ahmetb/kubectx (install first)
     -> kubens (command to see all the namespace and highlight the active one)
     -> kubens my-namespace (command to switch to another namespace as active)

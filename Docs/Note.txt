@@ -14,6 +14,21 @@
     -> Run with 'hyperv':
         -> minikube start --driver=hyperv
         
+*) Removed Added nodes from the kubectl config file:
+    -> Find the context related to your cluster. A context typically looks like this:
+        contexts:
+        - context:
+            cluster: your-cluster-name
+            user: your-user-name
+            namespace: your-namespace
+        name: your-context-name
+    -> you can remove the added 'context', 'users' & 'clusters' information from this file: ~/.kube/config.
+    -> Alternatively, you can use the kubectl config command to achieve the same:
+    -> kubectl config view (view all the context)
+    -> kubectl config delete-context <your-context-name> (remove given context)
+    -> kubectl config unset users.<user_name>
+    -> kubectl config unset clusters.<cluster_name>
+    -> OR to delete context:
 
 *) If minikube stop working in windows 10 with hyperv:
     -> minikube config set driver hyperv
