@@ -1,61 +1,86 @@
 -> NOTE: that we can't access the component that is not apply of the default namespace to access the component that you apply in different not active namespace that you have to apply '-n <namespace_flag'
+
 -> kubectl version --output=yaml (see client and server version)
--> minikube --version
--> minikube start --driver==hyperv(start kubernetes cluster with hyperv hypervisor)
--> minikube config set driver hyperv (set hyperv as default driver)
--> minikube addons list (list all the addons available)
--> minikube addons enable <addons_name> (enable addons like: 'ingress')
--> minikube tunnel (open minikube tunnel)
 -> kubectl get all (to get all Cluster, Service & Deployment)
--> kubectl get nodes (to get all nodes)
 -> minikube status (status of minikube)
--> kubectl get pod (get list of Pods)
--> kubectl get services (get the running services)
--> kubectl get service (get the running services)
 -> kubectl create -h (we can see all the docs on create command)
--> kubectl create deployment <Name_of_deployment> --image=image [--dry-run] [options] (so here we will create pods using deployment so firstly we will provide the name of the deployment and image like docker container image)
--> kubectl get deployment (get list of deployments)
--> kubectl get replicaset (get list of replicaSet)
--> kubectl edit deployment <Name_of_deployment> (to edit deployment configuration file)
--> kubectl logs <pod_name> (to see all the logs on that pod)
--> kubectl describe <pod_name> (To see the state changes that is happening inside the pod)
--> kubectl exec -it <pod_name> -- bin/bash (To get the interactive terminal of the application that is running)
--> kubectl exec -it <pod_name> -- sh (to get the intefactive shell terminal of the running pod container)
--> kubectl delete deployment <Name_of_deployment> (delete deployment)
--> kubectl delete service <Name_of_service> (delete service)
--> kubectl apply -f <config_file_name>.yaml (to create service, deployment or secret from the configuration file)
--> kubectl apply -f .\<component_filename>.yaml --namespace=<namespace_name> (create component on specific given namespace)
--> kubectl apply -f .\<namespace_filename>.yaml (to create namespace using configuration file)
--> kubectl apply -f ./ (apply all the k8s config file consist inside current directory)
--> kubectl describe service <Name_of_service> (check the service information)
--> kubectl get pod -o wide (get more information about Pods like Ip address as well)
--> kubectl get deployment nginx-deployment -o yaml (to see the updated configuration of deployment stored inside 'etcd' in Master Node)
--> kubectl get deployment nginx-deployment -o yaml > <deployment_result_file_name>.yaml (to store the updated configuration of deployment stored inside 'etcd' in Master Node inside given file)
 -> kubectl delete -f .\<Deployment_file_name>.yaml (delete Deployment using configuration file)
 -> kubectl delete -f .\<Service_file_name>.yaml (delete service using configuration file)
--> kubectl get secret (get list of secret that we have crated)
--> kubectl get pod --watch (to see status of pod live)
 -> kubectl get all | grep <name_of_component> (If you want to get all the component information for specific deployment)
--> kubectl get configMap (command to get the list of created configMap)
--> kubectl delete secret <secret_name> (command to delete secret)
--> kubectl get namespace (get all the list of namespace that are available on cluster)
--> kubectl create namespace <namespace_name> (create new namespace)
 -> kubectl api-resources --namespaced=false (get all the list of components that we can't Namespaced)
 -> kubectl api-resources --namespaced=true (get all the list of components that we can Namespaced)
 -> kubectl get <component_name> -n <namespace_name> (to get list of component that is apply on the given namespace)
--> kubectl delete namespace <namespace_name> (to delete given namespace)
-
--> kubectl config set-context --current --namespace=<namespace_name> (switch between active namespace)
--> kubectl get pods --all-namespaces (get all the pods according to it's namespace that it is running)
--> kubectl get <component> --all-namespaces
--> minikube addons enable ingress (Enable Ingress Controller, This will automatically start the K8s Nginx implementation of Ingress Controller)
+-> kubectl get <component> --all-namespaces (get list of component data included all namespaces)
 -> kubectl -n <namespace_name> delete <component> <name_of_component> (delete component from the specific given namespace)
--> kubectl get ingress -n kubernetes-dashboard (command to get the list of ingress on specific namespace)
--> kubectl delete -f .\dashboard-ingress.yaml (delete component with given file)
--> kubectl scale deployment --replicas=<number_of_replicas> <name_of_deployment> (scale the number of pods)
+-> kubectl delete -f .\<component_config>.yaml (delete component with given file)
 
--> kubectl config view (get the kubectl configuration information like the cluster that is added etc...)
--> kubectl get nodes (get all the nodes configured on kubectl)
+
+*) Minikube command:
+    -> minikube --version
+    -> minikube start --driver==hyperv(start kubernetes cluster with hyperv hypervisor)
+    -> minikube config set driver hyperv (set hyperv as default driver)
+    -> minikube addons list (list all the addons available)
+    -> minikube addons enable <addons_name> (enable addons like: 'ingress')
+    -> minikube tunnel (open minikube tunnel)
+    -> minikube addons enable ingress (Enable Ingress Controller, This will automatically start the K8s Nginx implementation of Ingress Controller)
+
+*) Pod command:
+    -> kubectl get pod (get list of Pods)
+    -> kubectl get pod --watch (to see status of pod live)
+    -> kubectl describe <pod_name> (To see the state changes that is happening inside the pod)
+    -> kubectl get pod -o wide (get list of pods with node information where it had get deployed)
+
+*) Node Command:
+    -> kubectl get nodes (get all the nodes configured on kubectl)
+
+*) Service Command:
+    -> kubectl describe service <Name_of_service> (check the service information)
+    -> kubectl get services (get the running services)
+    -> kubectl get service (get the running services)
+    -> kubectl delete service <Name_of_service> (delete service)
+
+*) Exec & Logs Command:
+    -> kubectl exec -it <pod_name> -- bin/bash (To get the interactive terminal of the application that is running)
+    -> kubectl exec -it <pod_name> -- sh (to get the intefactive shell terminal of the running pod container)
+    -> kubectl logs <pod_name> (to see all the logs on that pod)
+
+*) Apply Command:
+    -> kubectl apply -f <config_file_name>.yaml (to create service, deployment or secret from the configuration file)
+    -> kubectl apply -f .\<component_filename>.yaml --namespace=<namespace_name> (create component on specific given namespace)
+    -> kubectl apply -f .\<namespace_filename>.yaml (to create namespace using configuration file)
+    -> kubectl apply -f ./ (apply all the k8s config file consist inside current directory)
+    
+*) Deployment Command:
+    -> kubectl get deployment nginx-deployment -o yaml (to see the updated configuration of deployment stored inside 'etcd' in Master Node)
+    -> kubectl delete deployment <Name_of_deployment> (delete deployment)
+    -> kubectl get deployment nginx-deployment -o yaml > <deployment_result_file_name>.yaml (to store the updated configuration of deployment stored inside 'etcd' in Master Node inside given file)
+    -> kubectl create deployment <Name_of_deployment> --image=image [--dry-run] [options] (so here we will create pods using deployment so firstly we will provide the name of the deployment and image like docker container image)
+    -> kubectl scale deployment --replicas=<number_of_replicas> <name_of_deployment> (scale the number of pods)
+    -> kubectl get deployment (get list of deployments)
+    -> kubectl edit deployment <Name_of_deployment> (to edit deployment configuration file)
+    
+*) Namespace Command:
+    -> kubectl delete namespace <namespace_name> (to delete given namespace)
+    -> kubectl get namespace (get all the list of namespace that are available on cluster)
+    -> kubectl create namespace <namespace_name> (create new namespace)
+    -> kubectl get pods --all-namespaces (get all the pods according to it's namespace that it is running)
+    
+*) Secret & ConfigMap Command:
+    -> kubectl get secret (get list of secret that we have crated)
+    -> kubectl get configMap (command to get the list of created configMap)
+    -> kubectl delete secret <secret_name> (command to delete secret)
+    
+*) ReplicaSets
+    -> kubectl get replicaset (get list of replicaSet)
+
+    
+*) Config Command:
+    -> kubectl config set-context --current --namespace=<namespace_name> (switch between active namespace)
+    -> kubectl config view (get the kubectl configuration information like the cluster that is added etc...)
+    
+
+*) Ingress Command:
+    -> kubectl get ingress -n kubernetes-dashboard (command to get the list of ingress on specific namespace)
 
 
 *) Kubectx & kubens to switch between active namespace: https://github.com/ahmetb/kubectx (install first)
