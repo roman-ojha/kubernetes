@@ -38,7 +38,7 @@
             -> So we have to decide what type of storage cluster you services or application would need and create and manage then by yourself.
             -> Managing means do backups and make sure that they won't get corrupt.
             -> './06_Persistent_Volume.png'
-            -> This of an Kubernetes Storage as an External Plugins to you cluster. where it a local storage on the actual node where cluster is running or a remote storage.
+            -> This of an Kubernetes Storage as an External Plugins to you cluster. where it attach local storage on the actual node where cluster is running or a remote storage.
             -> './07_Persistent_Volume.png'
             -> And there could be multiple storage that is configured for you cluster where One application in you cluster uses Local storage another one uses an NFS server and or another one uses some cloud Storage.
             -> './08_Persistent_Volume_YAML_Example.png'

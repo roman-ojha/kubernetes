@@ -29,6 +29,8 @@
     -> kubectl get pod --watch (to see status of pod live)
     -> kubectl describe <pod_name> (To see the state changes that is happening inside the pod)
     -> kubectl get pod -o wide (get list of pods with node information where it had get deployed)
+    -> kubectl delete pods --all -n <namespace> (delete all pods with given namespace)
+    -> kubectl delete pod <pod_name> (delete given pod)
 
 *) Node Command:
     -> kubectl get nodes (get all the nodes configured on kubectl)
