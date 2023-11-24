@@ -13,6 +13,7 @@
 -> kubectl get <component> --all-namespaces (get list of component data included all namespaces)
 -> kubectl -n <namespace_name> delete <component> <name_of_component> (delete component from the specific given namespace)
 -> kubectl delete -f .\<component_config>.yaml (delete component with given file)
+-> kubectl version --c client (to see client version)
 
 
 *) Minikube command:
@@ -45,6 +46,7 @@
     -> kubectl exec -it <pod_name> -- bin/bash (To get the interactive terminal of the application that is running)
     -> kubectl exec -it <pod_name> -- sh (to get the intefactive shell terminal of the running pod container)
     -> kubectl logs <pod_name> (to see all the logs on that pod)
+    -> kubectl exec -it <pod_name> -- <application> (to run the application inside running pods/container EX: 'mongo' etc...)
 
 *) Apply Command:
     -> kubectl apply -f <config_file_name>.yaml (to create service, deployment or secret from the configuration file)
@@ -66,6 +68,8 @@
     -> kubectl get namespace (get all the list of namespace that are available on cluster)
     -> kubectl create namespace <namespace_name> (create new namespace)
     -> kubectl get pods --all-namespaces (get all the pods according to it's namespace that it is running)
+    -> kubectl config set-context --current --namespace=<namespaceName> (set given namespace as a default namespace)
+
     
 *) Secret & ConfigMap Command:
     -> kubectl get secret (get list of secret that we have crated)
@@ -84,10 +88,13 @@
 *) Ingress Command:
     -> kubectl get ingress -n kubernetes-dashboard (command to get the list of ingress on specific namespace)
 
+*) StorageClass:
+    -> kubectl get storageclass
 
 *) Kubectx & kubens to switch between active namespace: https://github.com/ahmetb/kubectx (install first)
     -> kubens (command to see all the namespace and highlight the active one)
     -> kubens my-namespace (command to switch to another namespace as active)
+
 
 
 *) Helm Commands:

@@ -1,0 +1,3 @@
+[submodule "Projects/voting-app"]
+	path = Projects/voting-app
+	url = git@github.com:roman-ojha/k8s-voting-app.git
