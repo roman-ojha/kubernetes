@@ -14,6 +14,11 @@
     -> Run with 'hyperv':
         -> minikube start --driver=hyperv
         
+
+*) Access LoadBalancer type service from the outside world:
+    -> kubectl get services
+    -> Grab the External-Ip address with the exposed port and then access using 'http://<External_Ip>:<port>
+        
 *) Removed Added nodes from the kubectl config file:
     -> Find the context related to your cluster. A context typically looks like this:
         contexts:

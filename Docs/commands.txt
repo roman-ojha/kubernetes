@@ -31,7 +31,10 @@
     -> kubectl describe <pod_name> (To see the state changes that is happening inside the pod)
     -> kubectl get pod -o wide (get list of pods with node information where it had get deployed)
     -> kubectl delete pods --all -n <namespace> (delete all pods with given namespace)
-    -> kubectl delete pod <pod_name> (delete given pod)
+    -> kubectl delete pod <pod_name1> <pod_name2> <pod_name3> ... (delete given pod)
+    -> kubectl get pods -l app=<deployment_name> (get all the list of pods that is created using given deployment)
+    -> kubectl get pods --namespace=<namespace_name> (get all the list of pods that is created using given namespace)
+    -> kubectl delete pods -l app=<deployment_name> (delete all the pods with given deployment)
 
 *) Node Command:
     -> kubectl get nodes (get all the nodes configured on kubectl)
@@ -40,7 +43,7 @@
     -> kubectl describe service <Name_of_service> (check the service information)
     -> kubectl get services (get the running services)
     -> kubectl get service (get the running services)
-    -> kubectl delete service <Name_of_service> (delete service)
+    -> kubectl delete service <Name_of_service1> <Name_of_service2> ... (delete service)
 
 *) Exec & Logs Command:
     -> kubectl exec -it <pod_name> -- bin/bash (To get the interactive terminal of the application that is running)
